@@ -83,11 +83,7 @@ Reporting Engine
 ```text
 mini-siem/
 ├── src/
-│   ├── main.py
-│   ├── parser.py
-│   ├── detectors.py
-│   ├── reporting.py
-│   └── rules.py
+│   ├── linuxMiniSIEM.py
 ├── docs/
 ├── examples/
 ├── reports/
