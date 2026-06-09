@@ -83,9 +83,13 @@ Reporting Engine
 ```text
 mini-siem/
 ├── src/
-│   ├── linuxMiniSIEM.py
+│   └── linuxMiniSIEM.py
 ├── docs/
 ├── examples/
+│   ├── benign_auth.log
+│   ├── sample_auth.log
+│   ├── compromised_host.log
+│   └── insider_activity.log
 ├── reports/
 ├── screenshots/
 ├── tests/
@@ -150,10 +154,6 @@ This project is intended to develop practical experience with:
 
 * MITRE ATT&CK mapping
 * Sigma-style detection rules
-* HTML reporting
-* Docker deployment
-* Web dashboard
-* Real-time log monitoring
 
 ---
 

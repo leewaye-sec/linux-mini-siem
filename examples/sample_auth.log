@@ -1,0 +1,46 @@
+Jun 15 08:01:12 server01 sshd[1024]: Accepted publickey for admin from 10.0.0.5 port 52731 ssh2
+
+Jun 15 08:05:17 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/systemctl restart nginx
+
+Jun 15 09:10:01 server01 sshd[1183]: Failed password for invalid user administrator from 185.220.101.10 port 43422 ssh2
+Jun 15 09:10:03 server01 sshd[1184]: Failed password for invalid user administrator from 185.220.101.10 port 43425 ssh2
+Jun 15 09:10:05 server01 sshd[1185]: Failed password for invalid user administrator from 185.220.101.10 port 43429 ssh2
+Jun 15 09:10:07 server01 sshd[1186]: Failed password for invalid user administrator from 185.220.101.10 port 43431 ssh2
+Jun 15 09:10:10 server01 sshd[1187]: Failed password for invalid user administrator from 185.220.101.10 port 43434 ssh2
+Jun 15 09:10:12 server01 sshd[1188]: Failed password for invalid user administrator from 185.220.101.10 port 43437 ssh2
+Jun 15 09:10:14 server01 sshd[1189]: Failed password for invalid user administrator from 185.220.101.10 port 43440 ssh2
+Jun 15 09:10:17 server01 sshd[1190]: Failed password for invalid user administrator from 185.220.101.10 port 43442 ssh2
+Jun 15 09:10:19 server01 sshd[1191]: Failed password for invalid user administrator from 185.220.101.10 port 43444 ssh2
+Jun 15 09:10:21 server01 sshd[1192]: Failed password for invalid user administrator from 185.220.101.10 port 43447 ssh2
+Jun 15 09:10:23 server01 sshd[1193]: Failed password for invalid user administrator from 185.220.101.10 port 43449 ssh2
+Jun 15 09:10:25 server01 sshd[1194]: Failed password for invalid user administrator from 185.220.101.10 port 43452 ssh2
+
+Jun 15 09:22:01 server01 sshd[1301]: Failed password for root from 203.0.113.50 port 55821 ssh2
+Jun 15 09:22:04 server01 sshd[1302]: Failed password for root from 203.0.113.50 port 55824 ssh2
+Jun 15 09:22:06 server01 sshd[1303]: Failed password for root from 203.0.113.50 port 55828 ssh2
+Jun 15 09:22:08 server01 sshd[1304]: Failed password for root from 203.0.113.50 port 55831 ssh2
+Jun 15 09:22:12 server01 sshd[1305]: Accepted password for root from 203.0.113.50 port 55835 ssh2
+
+Jun 15 09:45:17 server01 useradd[1452]: new user: name=backupsvc, UID=1003, GID=1003, home=/home/backupsvc, shell=/bin/bash
+
+Jun 15 09:47:03 server01 passwd[1461]: password changed for backupsvc
+
+Jun 15 10:05:43 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/useradd tempadmin
+
+Jun 15 10:05:45 server01 useradd[1512]: new user: name=tempadmin, UID=1004, GID=1004, home=/home/tempadmin, shell=/bin/bash
+
+Jun 15 10:15:22 server01 sshd[1602]: Accepted password for tempadmin from 198.51.100.25 port 60312 ssh2
+
+Jun 15 10:35:11 server01 sshd[1703]: Failed password for invalid user test from 192.0.2.100 port 42155 ssh2
+
+Jun 15 10:42:09 server01 sudo:    tempadmin : TTY=pts/2 ; PWD=/home/tempadmin ; USER=root ; COMMAND=/usr/bin/apt install netcat
+
+Jun 15 11:05:18 server01 systemd[1]: Started nginx.service
+
+Jun 15 11:07:54 server01 systemd[1]: Stopped auditd.service
+
+Jun 15 11:08:01 server01 systemd[1]: Stopped firewalld.service
+
+Jun 15 11:08:15 server01 systemd[1]: Started telnet.socket
+
+Jun 15 11:12:42 server01 sshd[1821]: Accepted publickey for admin from 10.0.0.8 port 59124 ssh2

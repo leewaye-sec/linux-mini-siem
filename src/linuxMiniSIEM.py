@@ -1,0 +1,166 @@
+#!/usr/local/bin/python3
+#==========================================================================
+#
+#           File : linuxMiniSIEM.py
+#        Project : 
+#    Description : 
+#                  
+#
+# History
+#---------
+#
+# 260608    KL  Initial Prototype
+#
+#==========================================================================
+#--------------------
+# Imports
+#--------------------
+import sys
+import os
+import argparse
+import logging
+
+from pathlib import Path
+import subprocess
+import json
+import textwrap
+from datetime import datetime
+
+#--------------------
+# Global Variables
+#--------------------
+# Timestamp
+global TIMESTAMP
+timestamp_dirty = datetime.now()
+TIMESTAMP = timestamp_dirty.strftime("%Y%m%d_%H%M%S")
+
+# Path Definitions
+global CWD
+CWD = os.path.abspath(os.getcwd())
+CWD = CWD + "/"
+
+#--------------------------------------------------------------------------
+# Functions
+#--------------------------------------------------------------------------
+#==============
+# Generates name for audit report
+#   Only called if not defined by user
+#==============
+def generateOutputName():
+
+    system_identifier = None
+    base_output_name = f"{CWD}{TIMESTAMP}_Reports"
+    output_name_to_ret = base_output_name
+
+    #---------
+    # Define the paths of uid's for the system
+    #   Will check several files to have several options
+    #---------
+    # Define machine-id file path 
+    machine_id_path = Path("/etc/machine-id")
+
+    # Define product_uuid path
+    product_uuid_path = Path("/sys/class/dmi/id/product_uuid")
+
+    #---------
+    # Determine which uid to use
+    #---------
+    uid_path = None
+    if machine_id_path.is_file():
+        logging.debug(f"Using file path for machine id [ {machine_id_path} ]")
+        uid_path = machine_id_path
+
+    elif product_uuid_path.is_file():
+        logging.debug(f"Using file path for product uuid [ {product_uuid_path} ]")
+        uid_path = product_uuid_path 
+
+    #---------
+    # Determine Unique Identifier if available
+    #---------
+    if uid_path is not None:
+        try:
+            with open(uid_path, "r") as file:
+                system_identifier = file.read().strip()
+            #logging.debug(f"\tDetermining System UID [ {system_identifier} ]")
+        except FileNotFoundError:
+            logging.exception(f"Error: File was not found [ {uid_path} ]")
+        except PermissionError:
+            logging.exception(f"Error: Permissions error for uid file [ {uid_path} ]")
+        except Exception as e:
+            logging.exception(f"Unexpected error [ {e} ]")
+
+        # Add the UID to the base name
+        output_name_to_ret = f"{output_name_to_ret}_{system_identifier}.json"
+
+    # If path check failed or opening/reading file failed, proceed without the information
+    else:
+        output_name_to_ret = f"{output_name_to_ret}.json"
+
+    basename= os.path.basename(output_name_to_ret)
+    logging.debug(f"\t\tOutput File Name Determined [ {basename} ]")
+
+    return output_name_to_ret 
+
+#==========================================================================
+# Main
+#==========================================================================
+def main():
+    
+    # Grab the script version
+    script_version = sys.argv[0]
+
+    # Initial Help Menu Output
+    parser = argparse.ArgumentParser(
+        prog = script_version,
+        description = "Linux System Security Information and Even Management (SIEM)",
+        formatter_class = argparse.RawDescriptionHelpFormatter,
+        epilog = textwrap.dedent(f'''
+            Examples:
+                Show options associated with script
+                    => python3 {script_version} -h
+                
+                Run script with input log
+                    => python3 {script_version} -f </path/to/input.log>
+                
+                Run script with input log and console only output
+                    => python3 {script_version} -f </path/to/input.log> -p
+            '''))
+
+    # Start considering logging
+    global verbose_logging
+    verbose_logging = False
+
+    # Set some 'global' options
+    siem_parser = argparse.ArgumentParser(add_help=False, formatter_class = argparse.RawTextHelpFormatter)
+    siem_parser.add_argument('-i', '--input', required=True, help='Specify input log path')
+    siem_parser.add_argument("-v", "--verbose", action="store_true", help="Logging output will be verbose")
+    siem_parser.add_argument('-p', '--print', action='store_true', help='Print results to STDOUT only')
+    siem_parser.add_argument('-o', '--output', help='Specify audit report path/name')
+
+
+    #========================
+    # Process Passed Arguments
+    #========================
+    args = parser.parse_args()
+
+    # Set logging levels
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s \t[[ %(levelname)s ]] \t%(message)s',datefmt='%Y-%m-%d %I:%M:%S %p')
+    else:
+        logging.basicConfig(level=logging.INFO, format='%(asctime)s \t[[ %(levelname)s ]] \t%(message)s',datefmt='%Y-%m-%d %I:%M:%S %p')
+
+    # Handle some global variables
+    global OUTPUT
+    global PRINT
+
+    # Determine output name (if defined or generated)
+    if not PRINT:
+        OUTPUT = args.output if args.output else generateOutputName()
+
+
+
+    
+if __name__ == "__main__":
+    main()
+
+

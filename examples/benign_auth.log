@@ -1,0 +1,15 @@
+Jun 16 08:00:15 server01 sshd[1001]: Accepted publickey for admin from 10.0.0.5 port 50211 ssh2
+
+Jun 16 08:12:31 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/systemctl restart nginx
+
+Jun 16 08:13:04 server01 systemd[1]: Started nginx.service
+
+Jun 16 09:22:11 server01 sshd[1105]: Accepted publickey for admin from 10.0.0.5 port 50314 ssh2
+
+Jun 16 10:01:44 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/apt update
+
+Jun 16 10:01:56 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/apt upgrade
+
+Jun 16 11:15:20 server01 sshd[1220]: Accepted publickey for backupadmin from 10.0.0.6 port 51511 ssh2
+
+Jun 16 11:17:01 server01 systemd[1]: Started backup.service
