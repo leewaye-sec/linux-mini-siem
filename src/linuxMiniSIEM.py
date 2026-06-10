@@ -99,7 +99,52 @@ def generateOutputName():
     basename= os.path.basename(output_name_to_ret)
     logging.debug(f"\t\tOutput File Name Determined [ {basename} ]")
 
-    return output_name_to_ret 
+    return output_name_to_ret
+
+#==============
+# Determines if passed path exists
+#==============
+def verifyFilePath(passed_log_path):
+
+    logging.dubug(f"Verifying log path [ {passed_log_path} ]")
+
+    # Verify file exists
+    passed_path = Path(passed_log_path)
+
+    # Make sure the log exists
+    if passed_path.is_file():
+        return True
+    else:
+        return False
+
+#==============
+# Wrapper function for SIEM utilities
+#==============
+def siemDetectionProcessing(line):
+    logging.debug("Entering SIEM Processing rules")
+
+#==============
+# Wrapper function for SIEM utilities
+#==============
+def siemWrapper(input_log):
+
+    # Verify path exists
+    if not verifyFilePath(input_log):
+        logging.error(f"Unable to verify log path [ {input_log} ]")
+        sys.exit()
+
+    # Begin log ingest and processing
+    try:
+        with open(input_log, "r") as ifile:
+            for line in ifile:
+                siemDetectionProcessing(line)
+    except FileNotFoundError:
+        logging.exception(f"File not found [ {input_log} ]")
+    except PermissionError:
+        logging.exception(f"Permissions error for file [ {input_log} ]")
+    except Exception as e:
+        logging.exception(f"Unexpected error while reading file [ {e} ]")
+
 
 #==========================================================================
 # Main
@@ -124,6 +169,7 @@ def main():
                 
                 Run script with input log and console only output
                     => python3 {script_version} -f </path/to/input.log> -p
+                    
             '''))
 
     # Start considering logging
@@ -131,11 +177,10 @@ def main():
     verbose_logging = False
 
     # Set some 'global' options
-    siem_parser = argparse.ArgumentParser(add_help=False, formatter_class = argparse.RawTextHelpFormatter)
-    siem_parser.add_argument('-i', '--input', required=True, help='Specify input log path')
-    siem_parser.add_argument("-v", "--verbose", action="store_true", help="Logging output will be verbose")
-    siem_parser.add_argument('-p', '--print', action='store_true', help='Print results to STDOUT only')
-    siem_parser.add_argument('-o', '--output', help='Specify audit report path/name')
+    parser.add_argument('-i', '--input', required=True, help='Specify input log path')
+    parser.add_argument("-v", "--verbose", action="store_true", help="Logging output will be verbose")
+    parser.add_argument('-p', '--print', action='store_true', help='Print results to STDOUT only')
+    parser.add_argument('-o', '--output', help='Specify audit report path/name')
 
 
     #========================
@@ -157,9 +202,9 @@ def main():
     if not PRINT:
         OUTPUT = args.output if args.output else generateOutputName()
 
+    # Call the SIEM wrapper - pass the input log path
+    siemWrapper(args.input)
 
-
-    
 if __name__ == "__main__":
     main()
 
