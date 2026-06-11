@@ -2,8 +2,8 @@
 #==========================================================================
 #
 #           File : linuxMiniSIEM.py
-#        Project : 
-#    Description : 
+#        Project : Mini-SIEM
+#    Description : Ingests and analyses security logs for defined events
 #                  
 #
 # History
@@ -38,6 +38,23 @@ TIMESTAMP = timestamp_dirty.strftime("%Y%m%d_%H%M%S")
 global CWD
 CWD = os.path.abspath(os.getcwd())
 CWD = CWD + "/"
+
+# Create root directory
+global PROJECT_ROOT
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.append(str(PROJECT_ROOT))
+
+#----------------
+# Class Path / Definitions / Imports
+#----------------
+# Class directory path addition to path
+global CLASS_PATH
+CLASS_PATH = CWD + "SIEM_CLASSES"
+sys.path.append(CLASS_PATH)
+
+# Import DataClass Definitions
+from SIEM_CLASSES.StandardizedDataStructures import LogEvent
+from SIEM_CLASSES.StandardizedDataStructures import EventFinding
 
 #--------------------------------------------------------------------------
 # Functions
@@ -106,7 +123,7 @@ def generateOutputName():
 #==============
 def verifyFilePath(passed_log_path):
 
-    logging.dubug(f"Verifying log path [ {passed_log_path} ]")
+    logging.debug(f"Verifying log path [ {passed_log_path} ]")
 
     # Verify file exists
     passed_path = Path(passed_log_path)
