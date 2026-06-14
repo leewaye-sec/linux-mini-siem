@@ -18,7 +18,8 @@ from datetime import datetime
 class LogEvent:
     entry_timestamp: datetime
     entry_hostname: str
-    entry_type: str
+    entry_class: str
+    entry_class_type: str
     entry_source_ip: str | None = None
     entry_username: str | None = None
     entry_raw_log: str | None = None

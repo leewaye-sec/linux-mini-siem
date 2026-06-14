@@ -53,8 +53,7 @@ CLASS_PATH = CWD + "SIEM_CLASSES"
 sys.path.append(CLASS_PATH)
 
 # Import DataClass Definitions
-from SIEM_CLASSES.StandardizedDataStructures import LogEvent
-from SIEM_CLASSES.StandardizedDataStructures import EventFinding
+from SIEM_CLASSES.SIEMLogParser import siemLogParser
 
 #--------------------------------------------------------------------------
 # Functions
@@ -137,9 +136,6 @@ def verifyFilePath(passed_log_path):
 #==============
 # Wrapper function for SIEM utilities
 #==============
-def siemDetectionProcessing(line):
-    logging.debug("Entering SIEM Processing rules")
-
 #==============
 # Wrapper function for SIEM utilities
 #==============
@@ -150,11 +146,28 @@ def siemWrapper(input_log):
         logging.error(f"Unable to verify log path [ {input_log} ]")
         sys.exit()
 
+    # Create the needed objects
+    log_parser = siemLogParser()
+
+    log_findings = []
+
     # Begin log ingest and processing
     try:
         with open(input_log, "r") as ifile:
+            # Iterate through the lines and standardize into an event
             for line in ifile:
-                siemDetectionProcessing(line)
+                log_event = log_parser.parseLogLine(line)
+
+                # Ensure that the event isn't empty / None
+                if not log_event:
+                    continue
+
+                # Once the log event is standardized:
+                #   Proccess the event(s) and create an EventFinding
+                #   Once findings are processed, add to log_findings array
+                #   Then create report
+                #log_finding =
+
     except FileNotFoundError:
         logging.exception(f"File not found [ {input_log} ]")
     except PermissionError:

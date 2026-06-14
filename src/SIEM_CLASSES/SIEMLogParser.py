@@ -42,8 +42,9 @@ class siemLogParser:
         log_hostname = line_split[0]
         del line_split[0]
 
-        # Log Entry Type
-        log_entry_type_dirty = line_split[0]
+        # Log Entry Class
+        #   Remove the unnecessary extra from the entry (e.g. sshd[7394]: --> sshd)
+        log_class= re.sub(r"(\[\d+\]):", "", line_split[0]).upper()
         del line_split[0]
 
         # Join the remaining line_split back into entry information string
@@ -54,17 +55,40 @@ class siemLogParser:
         #   Based on that, further parse information from the line
         #=======================
         # Event Type : sudo
-        if "sudo" in log_entry_type_dirty:
-            log_entry_type = "sudo"
+        if log_class == "SUDO":
+            log_class_type = "sudo"
         # Event Type : sshd
-        if "sshd" in log_entry_type_dirty:
-            log_entry_type = "sshd"
+        if log_class == "SSHD":
+            # Determine the entry type
+            if "Failed password" in log_entry_info:
+                log_class_type = "FAILED_LOGIN_ATTEMPT"
+            elif "Accepted password" in log_entry_info:
+                log_class_type = "SUCCESSFUL_LOGIN_ATTEMPT"
+
+            # Determine the source ip (regex is not enforcing IP address limits / allowable values)
+            log_source_ip = re.findall(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}',log_entry_info)[0]
+
+            # Determine the username - extract the information via ... for <user> from ...
+            log_user_name = re.search(r"for (.+) from", log_entry_info).group(1)
+
+            # Put the event together
+            LogEvent(
+                entry_timestamp=log_timestamp,
+                entry_hostname=log_hostname,
+                entry_class=log_class,
+                entry_class_type=log_class_type,
+                entry_source_ip=log_source_ip,
+                entry_username=log_user_name,
+                entry_raw_log=line
+            )
+            return LogEvent
+
         # Event Type : useradd
-        if "useradd" in log_entry_type_dirty:
-            log_entry_type = "useradd"
+        if log_class == "USERADD":
+            log_class_type = "useradd"
         # Event Type : passwd
-        if "passwd" in log_entry_type_dirty:
-            log_entry_type = "passwd"
+        if log_class == "PASSWD":
+            log_class_type = "passwd"
         # Event Type : systemd
-        if "systemd" in log_entry_type_dirty:
-            log_entry_type = "systemd"
+        if log_class == "SYSTEMD":
+            log_class_type = "systemd"
