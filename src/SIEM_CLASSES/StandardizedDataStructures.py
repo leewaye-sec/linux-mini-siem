@@ -33,5 +33,7 @@ class EventFinding:
     severity_level: str
     detected_finding: str
     finding_description: str
+    timestamp: datetime
     source_ip: str | None = None
     associated_username: str | None = None
+    event_count: int | None = None

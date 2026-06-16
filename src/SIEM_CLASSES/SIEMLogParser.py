@@ -126,6 +126,8 @@ class siemLogParser:
                 log_class_type = "FAILED_LOGIN_ATTEMPT"
             elif "Accepted password" in log_entry_info:
                 log_class_type = "SUCCESSFUL_LOGIN_ATTEMPT"
+            elif "invalid user" in log_entry_info:
+                log_class_type = "INVALID_USERNAME"
             else:
                 log_class_type = "SSHD"
 

@@ -12,20 +12,73 @@
 import re
 from datetime import datetime
 
+# Import the Dataclasses
+from StandardizedDataStructures import LogEvent
+from StandardizedDataStructures import EventFinding
+
 # Import the Detector Classes
-from SIEMDetectorDefinitions import SSHBruteForceDetector
-from SIEMDetectorDefinitions import UserCreationDetector
-from SIEMDetectorDefinitions import SudoActivityDetector
-from SIEMDetectorDefinitions import SuccessfulLoginDetector
+from DETECTORS import (
+    SSHBruteForceDetector,
+    SuccessfulLoginEvent,
+    InvalidUserAuthenticationEvent,
+    RootLoginEvent,
+    SudoActivityEvent,
+    SensitiveCommandEvent,
+    UserCreationEvent,
+    UserDeletionEvent,
+    GroupModificationEvent,
+    ServiceStopEvent,
+    SecurityControlDisabledEvent,
+    LegacyServiceEnabledEvent
+)
 
 #===============================
-# Class Definition
+# Class Definition : SystemEventContext
+#   Works to keep stateful information between detectors / detection engine
+#===============================
+class SystemEventContext:
+    def __init__(self):
+        # Failed Logins Data
+        self.failed_logins = {}
+        self.failed_logins_threshold = 5
+        self.invalid_username_logins = {}
+        self.invalid_username_threshold = 5
+
+        self.created_users = {}
+        self.sudo_events = []
+
+    # Define a few value return functions
+    def getFailedLoginsThreshold(self):
+        return self.failed_logins_threshold
+
+    def getInvalidUsernameThreshold(self):
+        return self.invalid_username_threshold
+
+#===============================
+# Class Definition : DetectionEngine
 #===============================
 class SIEMDetectionEngine:
     def __init__(self):
+        # Detectors
         self.eventDetectors = [
-            SSHBruteForceDetector(),
-            UserCreationDetector(),
-            SudoActivityDetector(),
-            SuccessfulLoginDetector()
         ]
+
+        # Keep track of log stateful data
+        self.eventContexts = SystemEventContext()
+
+
+    def process(self, event: LogEvent):
+
+        # Have list to store findings
+        all_findings = []
+
+        # Work through Detectors for passed event
+        for eDetector in self.eventDetectors:
+            event_finding = eDetector.processEvent(event, self.eventContexts)
+
+            # If event_finding returned, add returned finding to event_findings list
+            if event_finding:
+                all_findings.extend(event_finding)
+
+
+
