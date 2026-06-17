@@ -62,9 +62,12 @@ Log Parser
      v
 Detection Engine
      |
-     +--> SSH Detections
-     +--> User Activity Detections
+     +--> Authentication Detections
+     +--> User Management Detections
      +--> Privilege Escalation Detections
+     +--> Defense Evasion Detections
+     +--> Credential Access Detections
+     +--> Suspicious Command Detections
      |
      v
 Event Correlation
@@ -83,13 +86,28 @@ Reporting Engine
 ```text
 mini-siem/
 ├── src/
-│   └── linuxMiniSIEM.py
+│   ├── linuxMiniSIEM.py
+│   └── SIEM_CLASSES/
+│       ├── SIEMDetectionEngine.py
+│       ├── SIEMLogParser.py
+│       ├── StandardizedDataStructures.py
+│       └── DETECTORS/
+│           ├── __init__.py
+│           ├── DetectorBaseDefinition.py
+│           ├── AuthenticationEvents.py
+│           ├── CredentialAccessEvents.py
+│           ├── DefenseEvasionEvents.py
+│           ├── PrivilegeEscalationEvents.py
+│           ├── SuspiciousCommandEvents.py
+│           └── UserManagementEvents.py
 ├── docs/
+│   └── detection-matrix.md
 ├── examples/
 │   ├── benign_auth.log
-│   ├── sample_auth.log
 │   ├── compromised_host.log
-│   └── insider_activity.log
+│   ├── detection_validation.log
+│   ├── insider_activity.log
+│   └── sample_auth.log
 ├── reports/
 ├── screenshots/
 ├── tests/
@@ -101,14 +119,56 @@ mini-siem/
 
 ## Planned Detection Rules
 
-| Detection                       | Severity |
-| ------------------------------- | -------- |
-| SSH Brute Force                 | High     |
-| Successful Login After Failures | Critical |
-| New User Creation               | Medium   |
-| Sudo Activity                   | Low      |
-| Service Modification            | Medium   |
-| Unknown Authentication Failures | Medium   |
+### Authentication Events
+
+| Detection                       | Severity | Reason                                       |
+| ------------------------------- | -------- | -------------------------------------------- |
+| Invalid User Login              | LOW      | Reconnaissance                               |
+| Failed Login                    | INFO     | Common event, primarily used for correlation |
+| SSH Brute Force                 | HIGH     | Active attack                                |
+| Successful Login                | INFO     | Normal event, primarily used for correlation |
+| Successful Login After Failures | CRITICAL | Potential compromise                         |
+| Root Login Success              | CRITICAL | High-value account access                    |
+
+### User Management Events
+
+| Detection        | Severity | Reason                              |
+| ---------------- | -------- | ----------------------------------- |
+| User Created     | MEDIUM   | Administrative change / persistence |
+| User Deleted     | MEDIUM   | Account manipulation                |
+| Password Changed | MEDIUM   | Account manipulation                |
+
+### Privilege Escalation Events
+
+| Detection                 | Severity | Reason               |
+| ------------------------- | -------- | -------------------- |
+| User Added To sudo Group  | HIGH     | Privilege escalation |
+| User Added To wheel Group | HIGH     | Privilege escalation |
+
+### Credential Access Events
+
+| Detection          | Severity | Reason                              |
+| ------------------ | -------- | ----------------------------------- |
+| Shadow File Access | HIGH     | Credential access                   |
+| Passwd File Access | LOW      | Usually public, but worth recording |
+
+### Defence Evasion Events
+
+| Detection        | Severity | Reason                            |
+| ---------------- | -------- | --------------------------------- |
+| Auditd Stopped   | HIGH     | Disables auditing                 |
+| Firewall Stopped | HIGH     | Reduces host protection           |
+| Telnet Enabled   | HIGH     | Introduces insecure remote access |
+
+### Suspicious Commands Events
+
+| Detection           | Severity | Reason                                              |
+| ------------------- | -------- | --------------------------------------------------- |
+| Netcat Installation | HIGH     | Common attacker tooling                             |
+| Nmap Installation   | MEDIUM   | Legitimate admin tool but useful for reconnaissance |
+| Curl Download       | HIGH     | Potential payload retrieval                         |
+| Wget Download       | HIGH     | Potential payload retrieval                         |
+
 
 ---
 

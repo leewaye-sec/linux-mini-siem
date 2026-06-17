@@ -27,8 +27,8 @@ class UserDeletionEvent(Detector):
         pass
 
 #==============================
-# Detector Class : GroupModificationEvent
+# Detector Class : PasswordChangeEvent
 #=====================================
-class GroupModificationEvent(Detector):
+class PasswordChangeEvent(Detector):
     def processEvent(self, event, context):
         pass

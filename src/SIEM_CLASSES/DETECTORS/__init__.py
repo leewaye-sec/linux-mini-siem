@@ -15,14 +15,20 @@
 # Authentication
 from src.SIEM_CLASSES.DETECTORS.AuthenticationEvents import (SSHBruteForceDetector, SuccessfulLoginEvent, InvalidUserAuthenticationEvent, RootLoginEvent)
 
-# Privilege Escalation
-from src.SIEM_CLASSES.DETECTORS.PrivilegeEscalationEvents import (SudoActivityEvent, SensitiveCommandEvent)
-
 # User Management
-from src.SIEM_CLASSES.DETECTORS.UserManagementEvents import (UserCreationEvent, UserDeletionEvent, GroupModificationEvent)
+from src.SIEM_CLASSES.DETECTORS.UserManagementEvents import (UserCreationEvent, UserDeletionEvent, PasswordChangeEvent)
 
-# Service Modification
-from src.SIEM_CLASSES.DETECTORS.ServiceModificationEvents import (ServiceStopEvent, SecurityControlDisabledEvent, LegacyServiceEnabledEvent)
+# Privilege Escalation
+from src.SIEM_CLASSES.DETECTORS.PrivilegeEscalationEvents import (UserAddedToSudoEvent, UserAddedToWheelEvent)
+
+# Credential Access
+from src.SIEM_CLASSES.DETECTORS.CredentialAccessEvents import (ShadowFileAccessEvent, PasswdFileAccessEvent)
+
+# Defense Evasion
+from src.SIEM_CLASSES.DETECTORS.DefenseEvasionEvents import (AuditdStoppedEvent, FirewalldStoppedEvent, TelnetEnabledEvent)
+
+# Suspicious Commands
+from src.SIEM_CLASSES.DETECTORS.SuspiciousCommandEvents import (NetcatInstallationEvent, NmapInstallationEvent, CurlDownloadEvent, WgetDownloadEvent)
 
 #=====================================
 # Metadata
@@ -33,12 +39,18 @@ SUPPORTED_DETECTORS = [
     SuccessfulLoginEvent,
     InvalidUserAuthenticationEvent,
     RootLoginEvent,
-    SudoActivityEvent,
-    SensitiveCommandEvent,
     UserCreationEvent,
     UserDeletionEvent,
-    GroupModificationEvent,
-    ServiceStopEvent,
-    SecurityControlDisabledEvent,
-    LegacyServiceEnabledEvent
+    PasswordChangeEvent,
+    UserAddedToSudoEvent,
+    UserAddedToWheelEvent,
+    ShadowFileAccessEvent,
+    PasswdFileAccessEvent,
+    AuditdStoppedEvent,
+    FirewalldStoppedEvent,
+    TelnetEnabledEvent,
+    NetcatInstallationEvent,
+    NmapInstallationEvent,
+    CurlDownloadEvent,
+    WgetDownloadEvent
 ]

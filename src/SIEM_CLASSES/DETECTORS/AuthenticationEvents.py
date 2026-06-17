@@ -19,7 +19,7 @@ class SSHBruteForceDetector(Detector):
 
     def processEvent(self, event, context):
         # Define the decision pathways
-        if event.entry_class == "SSHD" and event.entry_class_type == "FAILED_LOGIN_ATTEMPT":
+        if event.entry_class == "AUTHENTICATION" and event.entry_subclass == "FAILED_LOGIN":
 
             #--------------
             # Begin processing for failed logins
@@ -45,7 +45,7 @@ class SSHBruteForceDetector(Detector):
                     return [
                         EventFinding(
                             severity_level="HIGH",
-                            detected_finding=event.entry_class_type,
+                            detected_finding=f"{event.entry_subclass}_ROOT",
                             finding_description="Failed Login Attempt for root",
                             timestamp=event.entry_timestamp,
                             source_ip=failure_ip,
@@ -54,10 +54,11 @@ class SSHBruteForceDetector(Detector):
                         )
                     ]
                 else:
+                    # May remove if logging / findings become flooded
                     return [
                         EventFinding(
                             severity_level="INFO",
-                            detected_finding=event.entry_class_type,
+                            detected_finding=event.entry_subclass,
                             finding_description="Single Failed Login Attempt",
                             timestamp=event.entry_timestamp,
                             source_ip=failure_ip,
@@ -72,7 +73,7 @@ class SSHBruteForceDetector(Detector):
                     return [
                         EventFinding(
                             severity_level="HIGH",
-                            detected_finding=event.entry_class_type,
+                            detected_finding=f"{event.entry_subclass}_ROOT",
                             finding_description="Multiple Failed Login Attempts for root",
                             timestamp=event.entry_timestamp,
                             source_ip=failure_ip,
@@ -84,7 +85,7 @@ class SSHBruteForceDetector(Detector):
                     return[
                         EventFinding(
                             severity_level="MEDIUM",
-                            detected_finding=event.entry_class_type,
+                            detected_finding=event.entry_subclass,
                             finding_description="Multiple Failed Login Attempts",
                             timestamp=event.entry_timestamp,
                             source_ip=failure_ip,
@@ -93,13 +94,13 @@ class SSHBruteForceDetector(Detector):
                         )
                     ]
 
-            # Mutliple Login Failures At or Above Threshold -- CRITICAL -- Likely active brute force
+            # Mutliple Login Failures At or Above Threshold -- HIGH -- Likely active brute force
             elif context.failed_logins[failure_ip] >= context.getFailedLoginsThreshold():
                 if event.entry_username == "root":
                     return [
                         EventFinding(
-                            severity_level="HIGH",
-                            detected_finding=event.entry_class_type,
+                            severity_level="CRITICAL",
+                            detected_finding=f"SSH_BRUTE_FORCE",
                             finding_description="Multiple Failed Login Attempts for root",
                             timestamp=event.entry_timestamp,
                             source_ip=failure_ip,
@@ -139,7 +140,7 @@ class SuccessfulLoginEvent(Detector):
 
         # Define the decision pathways
         # Handle multiple possible correlated events
-        if event.entry_class == "SSHD" and event.entry_class_type == "SUCCESSFUL_LOGIN_ATTEMPT":
+        if event.entry_class == "AUTHENTICATION" and event.entry_subclass == "SUCCESSFUL_LOGIN":
             # Process for non-root users
             if event.entry_username != "root":
                 # Single Success with no Failures
@@ -147,7 +148,7 @@ class SuccessfulLoginEvent(Detector):
                     return [
                         EventFinding(
                             severity_level="INFO",
-                            detected_finding=f"{event.entry_class_type}",
+                            detected_finding=f"{event.entry_subclass}",
                             finding_description=f"Successful login detected with [ {login_attempts} ] failures",
                             timestamp=event.entry_timestamp,
                             source_ip=successful_login_ip,
@@ -159,7 +160,7 @@ class SuccessfulLoginEvent(Detector):
                     return [
                         EventFinding(
                             severity_level="LOW",
-                            detected_finding=f"{event.entry_class_type}",
+                            detected_finding=f"{event.entry_subclass}",
                             finding_description=f"Successful login detected with [ {login_attempts} ] failures",
                             timestamp=event.entry_timestamp,
                             source_ip=successful_login_ip,
@@ -172,7 +173,7 @@ class SuccessfulLoginEvent(Detector):
                     return [
                         EventFinding(
                             severity_level="CRITICAL",
-                            detected_finding=f"{event.entry_class_type}",
+                            detected_finding=f"{event.entry_subclass}",
                             finding_description=f"Successful login detected with [ {login_attempts} ] failures",
                             timestamp=event.entry_timestamp,
                             source_ip=successful_login_ip,
@@ -180,6 +181,7 @@ class SuccessfulLoginEvent(Detector):
                             event_count=context.failed_logins.get(successful_login_ip)
                         )
                     ]
+            # Root Login Checked via different detector
             else:
                 return []
         else:
@@ -195,11 +197,11 @@ class InvalidUserAuthenticationEvent(Detector):
         login_ip = event.entry_source_ip
         login_username = event.entry_username
 
-        if event.entry_class == "SSHD" and event.entry_class_type == "INVALID_USERNAME":
+        if event.entry_class == "AUTHENTICATION" and event.entry_subclass == "INVALID_USER_LOGIN":
             return [
                 EventFinding(
                     severity_level="LOW",
-                    detected_finding=f"{event.entry_class_type}",
+                    detected_finding=f"{event.entry_subclass}",
                     finding_description=f"Attempted Login with Invalid User {context.failed_logins.get()}",
                     timestamp=event.entry_timestamp,
                     source_ip=login_ip,
@@ -221,11 +223,11 @@ class RootLoginEvent(Detector):
 
         login_attempts = context.failed_logins.get(successful_login_ip, 0)
 
-        if event.entry_class == "SSHD" and event.entry_class_type == "SUCCESSFUL_LOGIN_ATTEMPT" and login_username == "root":
+        if event.entry_class == "AUTHENTICATION" and event.entry_subclass == "SUCCESSFUL_LOGIN" and login_username == "root":
             return [
                 EventFinding(
                     severity_level="CRITICAL",
-                    detected_finding=f"{event.entry_class_type}",
+                    detected_finding=f"{event.entry_subclass}",
                     finding_description=f"Root Login Success after [ {login_attempts} ] Failures",
                     timestamp=event.entry_timestamp,
                     source_ip=successful_login_ip,

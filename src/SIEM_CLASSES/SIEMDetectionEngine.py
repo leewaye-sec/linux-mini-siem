@@ -38,14 +38,20 @@ from DETECTORS import (
 #===============================
 class SystemEventContext:
     def __init__(self):
-        # Failed Logins Data
+
+        #----------------
+        # Authentication
+        #----------------
         self.failed_logins = {}
         self.failed_logins_threshold = 5
         self.invalid_username_logins = {}
         self.invalid_username_threshold = 5
 
         self.created_users = {}
-        self.sudo_events = []
+
+        #----------------
+        # Privilege Escalation
+        #----------------
 
     # Define a few value return functions
     def getFailedLoginsThreshold(self):
