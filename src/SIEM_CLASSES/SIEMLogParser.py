@@ -133,7 +133,7 @@ class siemLogParser:
             elif 'scp' in log_entry_info:
                 log_type = "COMMAND_EXECUTION"
                 log_class = "SUSPICIOUS_COMMAND"
-                log_subclass = "SCP_USED"
+                log_subclass = "SCP_FILE_TRANSFER"
 
             # Sudo check : sensitive file - shadow
             elif '/etc/shadow' in log_entry_info:
@@ -141,17 +141,17 @@ class siemLogParser:
                 log_class = "CREDENTIAL_ACCESS"
                 log_subclass = "SHADOW_FILE_ACCESS"
 
-            # Sudo check : sensitive file - shadow
+            # Sudo check : sensitive file - passwd
             elif '/etc/passwd' in log_entry_info:
                 log_type = "COMMAND_EXECUTION"
                 log_class = "CREDENTIAL_ACCESS"
                 log_subclass = "PASSWD_FILE_ACCESS"
 
             # Sudo check : possible exfiltration
-            elif 'tar ' in log_entry_info:
+            elif 'tar -c' in log_entry_info:
                 log_type = "COMMAND_EXECUTION"
                 log_class = "SUSPICIOUS_COMMAND"
-                log_subclass = "TAR_USED"
+                log_subclass = "TAR_ARCHIVE_CREATION"
 
             # Put the event together
             return LogEvent(
@@ -196,6 +196,7 @@ class siemLogParser:
                 entry_class=log_class,
                 entry_subclass=log_subclass,
                 entry_source_ip=log_source_ip,
+                entry_privilege_level="Non-Elevated",
                 entry_username=log_user_name,
                 entry_raw_log=line
             )
@@ -220,6 +221,7 @@ class siemLogParser:
                 entry_class=log_class,
                 entry_subclass=log_subclass,
                 entry_username=log_username,
+                entry_privilege_level="Non-Elevated",
                 entry_raw_log=line
             )
 
@@ -247,6 +249,7 @@ class siemLogParser:
                     entry_class=log_class,
                     entry_subclass=log_subclass,
                     entry_username=username,
+                    entry_privilege_level="Non-Elevated",
                     entry_raw_log=line
                 )
 
@@ -271,6 +274,7 @@ class siemLogParser:
                     entry_class=log_class,
                     entry_subclass=log_subclass,
                     entry_username=username,
+                    entry_privilege_level="Non-Elevated",
                     entry_raw_log=line
                 )
 
@@ -304,6 +308,7 @@ class siemLogParser:
                 entry_type=log_type,
                 entry_class=log_class,
                 entry_subclass=log_subclass,
+                entry_privilege_level="Non-Elevated",
                 entry_raw_log=line
             )
 
@@ -315,5 +320,6 @@ class siemLogParser:
                 entry_type = "UNKNOWN",
                 entry_class = "UNKNOWN",
                 entry_subclass="IGNORED_EVENT",
+                entry_privilege_level="Non-Elevated",
                 entry_raw_log=line
             )

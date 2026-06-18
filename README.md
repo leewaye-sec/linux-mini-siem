@@ -164,8 +164,10 @@ mini-siem/
 
 | Detection           | Severity | Reason                                              |
 | ------------------- | -------- | --------------------------------------------------- |
-| Netcat Installation | HIGH     | Common attacker tooling                             |
 | Nmap Installation   | MEDIUM   | Legitimate admin tool but useful for reconnaissance |
+| TAR Archive Creation| MEDIUM   | Legitimate admin tool but useful for data staging   |
+| Netcat Installation | HIGH     | Common attacker tooling                             |
+| SCP File Transfer   | HIGH     | Potential data exfiltration                         |
 | Curl Download       | HIGH     | Potential payload retrieval                         |
 | Wget Download       | HIGH     | Potential payload retrieval                         |
 

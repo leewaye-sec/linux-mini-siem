@@ -48,6 +48,7 @@ class SSHBruteForceDetector(Detector):
                             detected_finding=f"{event.entry_subclass}_ROOT",
                             finding_description="Failed Login Attempt for root",
                             timestamp=event.entry_timestamp,
+                            privilege_level=event.entry_privilege_level,
                             source_ip=failure_ip,
                             associated_username=event_username,
                             event_count=context.failed_logins.get(failure_ip)
@@ -62,6 +63,7 @@ class SSHBruteForceDetector(Detector):
                             finding_description="Single Failed Login Attempt",
                             timestamp=event.entry_timestamp,
                             source_ip=failure_ip,
+                            privilege_level=event.entry_privilege_level,
                             associated_username=event_username,
                             event_count=context.failed_logins.get(failure_ip)
                         )
@@ -77,6 +79,7 @@ class SSHBruteForceDetector(Detector):
                             finding_description="Multiple Failed Login Attempts for root",
                             timestamp=event.entry_timestamp,
                             source_ip=failure_ip,
+                            privilege_level=event.entry_privilege_level,
                             associated_username=event_username,
                             event_count=context.failed_logins.get(failure_ip)
                         )
@@ -89,6 +92,7 @@ class SSHBruteForceDetector(Detector):
                             finding_description="Multiple Failed Login Attempts",
                             timestamp=event.entry_timestamp,
                             source_ip=failure_ip,
+                            privilege_level=event.entry_privilege_level,
                             associated_username=event_username,
                             event_count=context.failed_logins.get(failure_ip)
                         )
@@ -104,6 +108,7 @@ class SSHBruteForceDetector(Detector):
                             finding_description="Multiple Failed Login Attempts for root",
                             timestamp=event.entry_timestamp,
                             source_ip=failure_ip,
+                            privilege_level=event.entry_privilege_level,
                             associated_username=event_username,
                             event_count=context.failed_logins.get(failure_ip)
                         )
@@ -116,17 +121,17 @@ class SSHBruteForceDetector(Detector):
                             finding_description=f"[ {context.failed_logins.get(failure_ip)} ] Failed Logins Detected",
                             timestamp=event.entry_timestamp,
                             source_ip=failure_ip,
+                            privilege_level=event.entry_privilege_level,
                             associated_username=event_username,
                             event_count=context.failed_logins.get(failure_ip)
                         )
                     ]
-        else:
-            return []
+        return []
 
 #=====================================
 # Detector Class : SuccessfulLoginEvent
 #=====================================
-class SuccessfulLoginEvent(Detector):
+class SuccessfulLoginDetector(Detector):
     def processEvent(self, event, context):
 
         # Retrieve ip addr
@@ -152,6 +157,7 @@ class SuccessfulLoginEvent(Detector):
                             finding_description=f"Successful login detected with [ {login_attempts} ] failures",
                             timestamp=event.entry_timestamp,
                             source_ip=successful_login_ip,
+                            privilege_level=event.entry_privilege_level,
                             associated_username=login_username
                         )
                     ]
@@ -164,6 +170,7 @@ class SuccessfulLoginEvent(Detector):
                             finding_description=f"Successful login detected with [ {login_attempts} ] failures",
                             timestamp=event.entry_timestamp,
                             source_ip=successful_login_ip,
+                            privilege_level=event.entry_privilege_level,
                             associated_username=login_username,
                             event_count=context.failed_logins.get(successful_login_ip)
                         )
@@ -177,6 +184,7 @@ class SuccessfulLoginEvent(Detector):
                             finding_description=f"Successful login detected with [ {login_attempts} ] failures",
                             timestamp=event.entry_timestamp,
                             source_ip=successful_login_ip,
+                            privilege_level=event.entry_privilege_level,
                             associated_username=login_username,
                             event_count=context.failed_logins.get(successful_login_ip)
                         )
@@ -184,13 +192,12 @@ class SuccessfulLoginEvent(Detector):
             # Root Login Checked via different detector
             else:
                 return []
-        else:
-            return []
+        return []
 
 #=====================================
 # Detector Class : InvalidUserAuthenticationEvent
 #=====================================
-class InvalidUserAuthenticationEvent(Detector):
+class InvalidUserAuthenticationDetector(Detector):
     def processEvent(self, event, context):
 
         # Retrieve some variables
@@ -205,15 +212,18 @@ class InvalidUserAuthenticationEvent(Detector):
                     finding_description=f"Attempted Login with Invalid User {context.failed_logins.get()}",
                     timestamp=event.entry_timestamp,
                     source_ip=login_ip,
+                    privilege_level=event.entry_privilege_level,
                     associated_username=login_username,
                     event_count=context.failed_logins.get(login_ip)
                 )
             ]
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []
 
 #=====================================
 # Detector Class : RootLoginEvent
 #=====================================
-class RootLoginEvent(Detector):
+class RootLoginDetector(Detector):
     def processEvent(self, event, context):
         # Retrieve ip addr
         successful_login_ip = event.entry_source_ip
@@ -231,7 +241,11 @@ class RootLoginEvent(Detector):
                     finding_description=f"Root Login Success after [ {login_attempts} ] Failures",
                     timestamp=event.entry_timestamp,
                     source_ip=successful_login_ip,
+                    privilege_level=event.entry_privilege_level,
                     associated_username=login_username,
                     event_count=context.failed_logins.get(successful_login_ip)
                 )
-    ]
+            ]
+
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []

@@ -19,17 +19,25 @@ from StandardizedDataStructures import EventFinding
 # Import the Detector Classes
 from DETECTORS import (
     SSHBruteForceDetector,
-    SuccessfulLoginEvent,
-    InvalidUserAuthenticationEvent,
-    RootLoginEvent,
-    SudoActivityEvent,
-    SensitiveCommandEvent,
-    UserCreationEvent,
-    UserDeletionEvent,
-    GroupModificationEvent,
-    ServiceStopEvent,
-    SecurityControlDisabledEvent,
-    LegacyServiceEnabledEvent
+    SuccessfulLoginDetector,
+    InvalidUserAuthenticationDetector,
+    RootLoginDetector,
+    UserCreationDetector,
+    UserDeletionDetector,
+    PasswordChangeDetector,
+    UserAddedToSudoDetector,
+    UserAddedToWheelDetector,
+    ShadowFileAccessDetector,
+    PasswdFileAccessDetector,
+    AuditdStoppedDetector,
+    FirewalldStoppedDetector,
+    TelnetEnabledDetector,
+    NetcatInstallationDetector,
+    NmapInstallationDetector,
+    CurlDownloadDetector,
+    WgetDownloadDetector,
+    SCPFileTransferDetector,
+    TarCreationDetector
 )
 
 #===============================

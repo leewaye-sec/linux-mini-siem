@@ -21,7 +21,7 @@ class LogEvent:
     entry_type: str
     entry_class: str
     entry_subclass: str
-    entry_privilege_level : str | None = None
+    entry_privilege_level : str
     entry_source_ip: str | None = None
     entry_username: str | None = None
     entry_raw_log: str | None = None
@@ -36,6 +36,8 @@ class EventFinding:
     detected_finding: str
     finding_description: str
     timestamp: datetime
+    privilege_level: str
     source_ip: str | None = None
     associated_username: str | None = None
     event_count: int | None = None
+    additional_details: str | None = None

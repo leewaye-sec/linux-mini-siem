@@ -15,27 +15,129 @@ from src.SIEM_CLASSES.DETECTORS.DetectorBaseDefinition import Detector
 #=====================================
 # Detector Class : NetcatInstallationEvent
 #=====================================
-class NetcatInstallationEvent(Detector):
+class NetcatInstallationDetector(Detector):
     def processEvent(self, event, context):
-        pass
+        if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "NETCAT_INSTALLATION":
+            return [
+                EventFinding(
+                    severity_level="HIGH",
+                    detected_finding=f"{event.entry_subclass}",
+                    finding_description=f"Package installation [ netcat ]",
+                    timestamp=event.entry_timestamp,
+                    associated_username=event.entry_username,
+                    privilege_level=event.entry_privilege_level,
+                )
+            ]
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []
 
 #=====================================
 # Detector Class : NmapInstallationEvent
 #=====================================
-class NmapInstallationEvent(Detector):
+class NmapInstallationDetector(Detector):
     def processEvent(self, event, context):
-        pass
+        if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "NMAP_INSTALLATION":
+            return [
+                EventFinding(
+                    severity_level="MEDIUM",
+                    detected_finding=f"{event.entry_subclass}",
+                    finding_description=f"Package installation [ nmap ]",
+                    timestamp=event.entry_timestamp,
+                    associated_username=event.entry_username,
+                    privilege_level=event.entry_privilege_level,
+                )
+            ]
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []
 
 #=====================================
 # Detector Class : CurlDownloadEvent
 #=====================================
-class CurlDownloadEvent(Detector):
+class CurlDownloadDetector(Detector):
     def processEvent(self, event, context):
-        pass
+        if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "CURL_DOWNLOAD":
+            # Isolate command
+            log = event.entry_raw_log
+            command = log.split(':')[-1].split(';')[-1]
+            return [
+                EventFinding(
+                    severity_level="HIGH",
+                    detected_finding=f"{event.entry_subclass}",
+                    finding_description=f"",
+                    timestamp=event.entry_timestamp,
+                    associated_username=event.entry_username,
+                    privilege_level=event.entry_privilege_level,
+                    additional_details=command
+                )
+            ]
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []
 
 #=====================================
 # Detector Class : WgetDownloadEvent
 #=====================================
-class WgetDownloadEvent(Detector):
+class WgetDownloadDetector(Detector):
     def processEvent(self, event, context):
-        pass
+        if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "WGET_DOWNLOAD":
+            # Isolate command
+            log = event.entry_raw_log
+            command = log.split(':')[-1].split(';')[-1]
+            return [
+                EventFinding(
+                    severity_level="HIGH",
+                    detected_finding=f"{event.entry_subclass}",
+                    finding_description=f"",
+                    timestamp=event.entry_timestamp,
+                    associated_username=event.entry_username,
+                    privilege_level=event.entry_privilege_level,
+                    additional_details=command
+                )
+            ]
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []
+
+#=====================================
+# Detector Class : tarCreationDetector
+#=====================================
+class TarCreationDetector(Detector):
+    def processEvent(self, event, context):
+        if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "TAR_ARCHIVE_CREATION":
+            # Isolate command
+            log = event.entry_raw_log
+            command = log.split(':')[-1].split(';')[-1]
+            return [
+                EventFinding(
+                    severity_level="MEDIUM",
+                    detected_finding=f"{event.entry_subclass}",
+                    finding_description=f"",
+                    timestamp=event.entry_timestamp,
+                    associated_username=event.entry_username,
+                    privilege_level=event.entry_privilege_level,
+                    additional_details=command
+                )
+            ]
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []
+
+#=====================================
+# Detector Class : SCPFileTransferDetector
+#=====================================
+class SCPFileTransferDetector(Detector):
+    def processEvent(self, event, context):
+        if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "SCP_FILE_TRANSFER":
+            # Isolate command
+            log = event.entry_raw_log
+            command = log.split(':')[-1].split(';')[-1]
+            return [
+                EventFinding(
+                    severity_level="HIGH",
+                    detected_finding=f"{event.entry_subclass}",
+                    finding_description=f"",
+                    timestamp=event.entry_timestamp,
+                    associated_username=event.entry_username,
+                    privilege_level=event.entry_privilege_level,
+                    additional_details=command
+                )
+            ]
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []

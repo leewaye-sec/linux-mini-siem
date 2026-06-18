@@ -13,22 +13,22 @@
 # Detectors class imports
 #=====================================
 # Authentication
-from src.SIEM_CLASSES.DETECTORS.AuthenticationEvents import (SSHBruteForceDetector, SuccessfulLoginEvent, InvalidUserAuthenticationEvent, RootLoginEvent)
+from src.SIEM_CLASSES.DETECTORS.AuthenticationEvents import (SSHBruteForceDetector, SuccessfulLoginDetector, InvalidUserAuthenticationDetector, RootLoginDetector)
 
 # User Management
-from src.SIEM_CLASSES.DETECTORS.UserManagementEvents import (UserCreationEvent, UserDeletionEvent, PasswordChangeEvent)
+from src.SIEM_CLASSES.DETECTORS.UserManagementEvents import (UserCreationDetector, UserDeletionDetector, PasswordChangeDetector)
 
 # Privilege Escalation
-from src.SIEM_CLASSES.DETECTORS.PrivilegeEscalationEvents import (UserAddedToSudoEvent, UserAddedToWheelEvent)
+from src.SIEM_CLASSES.DETECTORS.PrivilegeEscalationEvents import (UserAddedToSudoDetector, UserAddedToWheelDetector)
 
 # Credential Access
-from src.SIEM_CLASSES.DETECTORS.CredentialAccessEvents import (ShadowFileAccessEvent, PasswdFileAccessEvent)
+from src.SIEM_CLASSES.DETECTORS.CredentialAccessEvents import (ShadowFileAccessDetector, PasswdFileAccessDetector)
 
 # Defense Evasion
-from src.SIEM_CLASSES.DETECTORS.DefenseEvasionEvents import (AuditdStoppedEvent, FirewalldStoppedEvent, TelnetEnabledEvent)
+from src.SIEM_CLASSES.DETECTORS.DefenseEvasionEvents import (AuditdStoppedDetector, FirewalldStoppedDetector, TelnetEnabledDetector)
 
 # Suspicious Commands
-from src.SIEM_CLASSES.DETECTORS.SuspiciousCommandEvents import (NetcatInstallationEvent, NmapInstallationEvent, CurlDownloadEvent, WgetDownloadEvent)
+from src.SIEM_CLASSES.DETECTORS.SuspiciousCommandEvents import (NetcatInstallationDetector, NmapInstallationDetector, CurlDownloadDetector, WgetDownloadDetector, SCPFileTransferDetector, TarCreationDetector)
 
 #=====================================
 # Metadata
@@ -36,21 +36,23 @@ from src.SIEM_CLASSES.DETECTORS.SuspiciousCommandEvents import (NetcatInstallati
 __version__ = "1.0.0"
 SUPPORTED_DETECTORS = [
     SSHBruteForceDetector,
-    SuccessfulLoginEvent,
-    InvalidUserAuthenticationEvent,
-    RootLoginEvent,
-    UserCreationEvent,
-    UserDeletionEvent,
-    PasswordChangeEvent,
-    UserAddedToSudoEvent,
-    UserAddedToWheelEvent,
-    ShadowFileAccessEvent,
-    PasswdFileAccessEvent,
-    AuditdStoppedEvent,
-    FirewalldStoppedEvent,
-    TelnetEnabledEvent,
-    NetcatInstallationEvent,
-    NmapInstallationEvent,
-    CurlDownloadEvent,
-    WgetDownloadEvent
+    SuccessfulLoginDetector,
+    InvalidUserAuthenticationDetector,
+    RootLoginDetector,
+    UserCreationDetector,
+    UserDeletionDetector,
+    PasswordChangeDetector,
+    UserAddedToSudoDetector,
+    UserAddedToWheelDetector,
+    ShadowFileAccessDetector,
+    PasswdFileAccessDetector,
+    AuditdStoppedDetector,
+    FirewalldStoppedDetector,
+    TelnetEnabledDetector,
+    NetcatInstallationDetector,
+    NmapInstallationDetector,
+    CurlDownloadDetector,
+    WgetDownloadDetector,
+    SCPFileTransferDetector,
+    TarCreationDetector
 ]

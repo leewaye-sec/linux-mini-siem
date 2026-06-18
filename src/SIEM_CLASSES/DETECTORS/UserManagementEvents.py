@@ -15,20 +15,56 @@ from src.SIEM_CLASSES.DETECTORS.DetectorBaseDefinition import Detector
 #=====================================
 # Detector Class : UserCreationEvent
 #=====================================
-class UserCreationEvent(Detector):
+class UserCreationDetector(Detector):
     def processEvent(self, event, context):
-        pass
+        if event.entry_type == "ACCOUNT_CHANGE" and event.entry_class == "USER_MANAGEMENT" and event.entry_subclass == "USER_CREATED":
+            return [
+                EventFinding(
+                    severity_level="MEDIUM",
+                    detected_finding=f"{event.entry_subclass}",
+                    finding_description=f"User management [ New User ]",
+                    timestamp=event.entry_timestamp,
+                    associated_username=event.entry_username,
+                    privilege_level=event.entry_privilege_level,
+                )
+            ]
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []
 
 #==============================
 # Detector Class : UserDeletionEvent
 #=====================================
-class UserDeletionEvent(Detector):
+class UserDeletionDetector(Detector):
     def processEvent(self, event, context):
-        pass
+        if event.entry_type == "ACCOUNT_CHANGE" and event.entry_class == "USER_MANAGEMENT" and event.entry_subclass == "USER_DELETED":
+            return [
+                EventFinding(
+                    severity_level="MEDIUM",
+                    detected_finding=f"{event.entry_subclass}",
+                    finding_description=f"User management [ User Deleted ]",
+                    timestamp=event.entry_timestamp,
+                    associated_username=event.entry_username,
+                    privilege_level=event.entry_privilege_level,
+                )
+            ]
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []
 
 #==============================
 # Detector Class : PasswordChangeEvent
 #=====================================
-class PasswordChangeEvent(Detector):
+class PasswordChangeDetector(Detector):
     def processEvent(self, event, context):
-        pass
+        if event.entry_type == "ACCOUNT_CHANGE" and event.entry_class == "USER_MANAGEMENT" and event.entry_subclass == "PASSWORD_CHANGED":
+            return [
+                EventFinding(
+                    severity_level="MEDIUM",
+                    detected_finding=f"{event.entry_subclass}",
+                    finding_description=f"User management [ User Password Change ]",
+                    timestamp=event.entry_timestamp,
+                    associated_username=event.entry_username,
+                    privilege_level=event.entry_privilege_level,
+                )
+            ]
+        # Return 'nothing' / empty array if event isn't for this detector
+        return []
