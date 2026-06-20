@@ -1,6 +1,6 @@
 # ==========================================================================
 #
-#           File : PrivilegeEscalationEvents.py
+#           File : PrivilegeEscalationDetector.py
 #        Project : Mini-SIEM
 #    Description : Class definitions for privilege escalation related events
 #

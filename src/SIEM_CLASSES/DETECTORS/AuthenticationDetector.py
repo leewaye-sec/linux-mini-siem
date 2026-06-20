@@ -1,6 +1,6 @@
 #==========================================================================
 #
-#           File : AuthenticationEvents.py
+#           File : AuthenticationDetector.py
 #        Project : Mini-SIEM
 #    Description : Class definitions for authentication related events
 #

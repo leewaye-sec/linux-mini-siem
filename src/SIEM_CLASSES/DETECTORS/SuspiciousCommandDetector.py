@@ -1,6 +1,6 @@
 #==========================================================================
 #
-#           File : SuspiciousCommandEvents.py
+#           File : SuspiciousCommandDetector.py
 #        Project : Mini-SIEM
 #    Description : Class definitions for suspicious command related events
 #

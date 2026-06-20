@@ -8,6 +8,7 @@
 #
 #==========================================================================
 from dataclasses import dataclass
+from dataclasses import asdict
 from datetime import datetime
 
 #------------------------
@@ -41,3 +42,6 @@ class EventFinding:
     associated_username: str | None = None
     event_count: int | None = None
     additional_details: str | None = None
+
+    def convert_to_dict(self):
+        return asdict(self)

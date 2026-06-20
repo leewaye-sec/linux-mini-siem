@@ -47,19 +47,14 @@ from DETECTORS import (
 class SystemEventContext:
     def __init__(self):
 
-        #----------------
-        # Authentication
-        #----------------
+        #-------------------------
+        # Authentication Contexts
+        #-------------------------
+        # failed_logins = ip : failed_login_count
         self.failed_logins = {}
         self.failed_logins_threshold = 5
         self.invalid_username_logins = {}
         self.invalid_username_threshold = 5
-
-        self.created_users = {}
-
-        #----------------
-        # Privilege Escalation
-        #----------------
 
     # Define a few value return functions
     def getFailedLoginsThreshold(self):
@@ -80,19 +75,15 @@ class SIEMDetectionEngine:
         # Keep track of log stateful data
         self.eventContexts = SystemEventContext()
 
-
+    # Process
     def process(self, event: LogEvent):
 
         # Have list to store findings
         all_findings = []
 
         # Work through Detectors for passed event
+        #   Extend the all_findings array with finding arrays returned
         for eDetector in self.eventDetectors:
-            event_finding = eDetector.processEvent(event, self.eventContexts)
+            all_findings.extend(eDetector.process(event, self.eventContexts))
 
-            # If event_finding returned, add returned finding to event_findings list
-            if event_finding:
-                all_findings.extend(event_finding)
-
-
-
+        return all_findings

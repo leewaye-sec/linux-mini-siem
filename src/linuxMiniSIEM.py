@@ -4,12 +4,6 @@
 #           File : linuxMiniSIEM.py
 #        Project : Mini-SIEM
 #    Description : Ingests and analyses security logs for defined events
-#                  
-#
-# History
-#---------
-#
-# 260608    KL  Initial Prototype
 #
 #==========================================================================
 #--------------------
@@ -21,10 +15,10 @@ import argparse
 import logging
 
 from pathlib import Path
-import subprocess
-import json
 import textwrap
 from datetime import datetime
+
+from src.SIEM_CLASSES.ReportGeneration import ReportGeneration
 
 #--------------------
 # Global Variables
@@ -54,69 +48,11 @@ sys.path.append(CLASS_PATH)
 
 # Import DataClass Definitions
 from SIEM_CLASSES.SIEMLogParser import siemLogParser
+from SIEM_CLASSES.SIEMDetectionEngine import SIEMDetectionEngine
 
 #--------------------------------------------------------------------------
 # Functions
 #--------------------------------------------------------------------------
-#==============
-# Generates name for audit report
-#   Only called if not defined by user
-#==============
-def generateOutputName():
-
-    system_identifier = None
-    base_output_name = f"{CWD}{TIMESTAMP}_Reports"
-    output_name_to_ret = base_output_name
-
-    #---------
-    # Define the paths of uid's for the system
-    #   Will check several files to have several options
-    #---------
-    # Define machine-id file path 
-    machine_id_path = Path("/etc/machine-id")
-
-    # Define product_uuid path
-    product_uuid_path = Path("/sys/class/dmi/id/product_uuid")
-
-    #---------
-    # Determine which uid to use
-    #---------
-    uid_path = None
-    if machine_id_path.is_file():
-        logging.debug(f"Using file path for machine id [ {machine_id_path} ]")
-        uid_path = machine_id_path
-
-    elif product_uuid_path.is_file():
-        logging.debug(f"Using file path for product uuid [ {product_uuid_path} ]")
-        uid_path = product_uuid_path 
-
-    #---------
-    # Determine Unique Identifier if available
-    #---------
-    if uid_path is not None:
-        try:
-            with open(uid_path, "r") as file:
-                system_identifier = file.read().strip()
-            #logging.debug(f"\tDetermining System UID [ {system_identifier} ]")
-        except FileNotFoundError:
-            logging.exception(f"Error: File was not found [ {uid_path} ]")
-        except PermissionError:
-            logging.exception(f"Error: Permissions error for uid file [ {uid_path} ]")
-        except Exception as e:
-            logging.exception(f"Unexpected error [ {e} ]")
-
-        # Add the UID to the base name
-        output_name_to_ret = f"{output_name_to_ret}_{system_identifier}.json"
-
-    # If path check failed or opening/reading file failed, proceed without the information
-    else:
-        output_name_to_ret = f"{output_name_to_ret}.json"
-
-    basename= os.path.basename(output_name_to_ret)
-    logging.debug(f"\t\tOutput File Name Determined [ {basename} ]")
-
-    return output_name_to_ret
-
 #==============
 # Determines if passed path exists
 #==============
@@ -136,9 +72,6 @@ def verifyFilePath(passed_log_path):
 #==============
 # Wrapper function for SIEM utilities
 #==============
-#==============
-# Wrapper function for SIEM utilities
-#==============
 def siemWrapper(input_log):
 
     # Verify path exists
@@ -148,10 +81,11 @@ def siemWrapper(input_log):
 
     # Create the needed objects
     log_parser = siemLogParser()
-
+    siem_engine = SIEMDetectionEngine()
     log_findings = []
 
     # Begin log ingest and processing
+    logging.info(f"Attempting ingest of log file [ {os.path.basename(OUTPUT)} ]")
     try:
         with open(input_log, "r") as ifile:
             # Iterate through the lines and standardize into an event
@@ -163,10 +97,13 @@ def siemWrapper(input_log):
                     continue
 
                 # Once the log event is standardized:
-                #   Proccess the event(s) and create an EventFinding
+                #   Proccess the event(s) and create findings via detectors
                 #   Once findings are processed, add to log_findings array
-                #   Then create report
-                #log_finding =
+                log_findings.extend(siem_engine.process(log_event))
+
+        # Generate report from findings
+        logging.info(f"Compiling findings in to JSON report")
+        ReportGeneration().generate_json_report(log_findings, OUTPUT, PRINT)
 
     except FileNotFoundError:
         logging.exception(f"File not found [ {input_log} ]")
@@ -228,14 +165,12 @@ def main():
     global OUTPUT
     global PRINT
 
-    # Determine output name (if defined or generated)
-    if not PRINT:
-        OUTPUT = args.output if args.output else generateOutputName()
+    # Determine output name (even if stdout only)
+    output_filename = f"{CWD}{TIMESTAMP}_SIEM_Findings.json"
+    OUTPUT = args.output if args.output else output_filename
 
     # Call the SIEM wrapper - pass the input log path
     siemWrapper(args.input)
 
 if __name__ == "__main__":
     main()
-
-

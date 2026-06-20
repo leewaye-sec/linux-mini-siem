@@ -1,6 +1,6 @@
 #==========================================================================
 #
-#           File : DefenseEvasionEvents.py
+#           File : DefenseEvasionDetector.py
 #        Project : Mini-SIEM
 #    Description : Class definitions for defense evasion related events
 #

@@ -1,6 +1,6 @@
 #==========================================================================
 #
-#           File : CredentialAccessEvents.py
+#           File : CredentialAccessDetector.py
 #        Project : Mini-SIEM
 #    Description : Class definitions for credential access related events
 #
@@ -17,7 +17,6 @@ from src.SIEM_CLASSES.DETECTORS.DetectorBaseDefinition import Detector
 #=====================================
 class ShadowFileAccessDetector(Detector):
     def processEvent(self, event, context):
-
         # Process if event marked for /etc/shadow access
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "CREDENTIAL_ACCESS" and event.entry_subclass == "SHADOW_FILE_ACCESS":
             return [

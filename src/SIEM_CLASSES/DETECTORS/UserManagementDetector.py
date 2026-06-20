@@ -1,6 +1,6 @@
 # ==========================================================================
 #
-#           File : UserManagementEvents.py
+#           File : UserManagementDetector.py
 #        Project : Mini-SIEM
 #    Description : Class definitions for user management related events
 #
