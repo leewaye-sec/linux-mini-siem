@@ -6,16 +6,15 @@
 #
 #==========================================================================
 # Import data classes
-from src.SIEM_CLASSES.StandardizedDataStructures import LogEvent
 from src.SIEM_CLASSES.StandardizedDataStructures import EventFinding
 
 # Import base detector
-from src.SIEM_CLASSES.DETECTORS.DetectorBaseDefinition import Detector
+from .DetectorBaseDefinition import BaseDetector
 
 #=====================================
 # Detector Class : AuditdStoppedEvent
 #=====================================
-class AuditdStoppedDetector(Detector):
+class AuditdStoppedDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "SERVICE_CHANGE" and event.entry_class == "DEFENSE_EVASION" and event.entry_subclass == "AUDITD_STOPPED":
             return [
@@ -33,7 +32,7 @@ class AuditdStoppedDetector(Detector):
 #=====================================
 # Detector Class : FirewalldStoppedEvent
 #=====================================
-class FirewalldStoppedDetector(Detector):
+class FirewalldStoppedDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "SERVICE_CHANGE" and event.entry_class == "DEFENSE_EVASION" and event.entry_subclass == "FIREWALL_STOPPED":
             return [
@@ -51,7 +50,7 @@ class FirewalldStoppedDetector(Detector):
 #=====================================
 # Detector Class : TelnetEnabledEvent
 #=====================================
-class TelnetEnabledDetector(Detector):
+class TelnetEnabledDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "SERVICE_CHANGE" and event.entry_class == "DEFENSE_EVASION" and event.entry_subclass == "TELNET_ENABLED":
             return [

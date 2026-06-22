@@ -8,13 +8,11 @@
 #
 #==========================================================================
 from abc import ABC, abstractmethod
-from src.SIEM_CLASSES.StandardizedDataStructures import LogEvent
-from src.SIEM_CLASSES.SIEMDetectionEngine import SystemEventContext
 
 #=====================================
 # Base Class : Detector
 #=====================================
-class Detector(ABC):
+class BaseDetector(ABC):
     @abstractmethod
-    def processEvent(self, event: LogEvent, context: SystemEventContext):
-        pass
+    def processEvent(self, event, context):
+            pass

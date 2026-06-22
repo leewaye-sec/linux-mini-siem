@@ -6,16 +6,15 @@
 #
 # ==========================================================================
 # Import data classes
-from src.SIEM_CLASSES.StandardizedDataStructures import LogEvent
 from src.SIEM_CLASSES.StandardizedDataStructures import EventFinding
 
 # Import base detector
-from src.SIEM_CLASSES.DETECTORS.DetectorBaseDefinition import Detector
+from .DetectorBaseDefinition import BaseDetector
 
 #==============================
 # Detector Class : UserAddedToSudoEvent
 #=====================================
-class UserAddedToSudoDetector(Detector):
+class UserAddedToSudoDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "PRIVILEGE_ESCALATION" and event.entry_subclass == "USER_ADDED_TO_SUDO":
             # Grab the information for what user was added to sudo
@@ -39,7 +38,7 @@ class UserAddedToSudoDetector(Detector):
 #=====================================
 # Detector Class : UserAddedToWheelEvent
 #=====================================
-class UserAddedToWheelDetector(Detector):
+class UserAddedToWheelDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "PRIVILEGE_ESCALATION" and event.entry_subclass == "USER_ADDED_TO_WHEEL":
             # Grab the information for what user was added to sudo

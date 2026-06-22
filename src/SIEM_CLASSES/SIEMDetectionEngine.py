@@ -9,12 +9,8 @@
 #----------------
 # Imports
 #----------------
-import re
-from datetime import datetime
-
 # Import the Dataclasses
 from StandardizedDataStructures import LogEvent
-from StandardizedDataStructures import EventFinding
 
 # Import the Detector Classes
 from DETECTORS import (
@@ -70,6 +66,26 @@ class SIEMDetectionEngine:
     def __init__(self):
         # Detectors
         self.eventDetectors = [
+            SSHBruteForceDetector(),
+            SuccessfulLoginDetector(),
+            InvalidUserAuthenticationDetector(),
+            RootLoginDetector(),
+            UserCreationDetector(),
+            UserDeletionDetector(),
+            PasswordChangeDetector(),
+            UserAddedToSudoDetector(),
+            UserAddedToWheelDetector(),
+            ShadowFileAccessDetector(),
+            PasswdFileAccessDetector(),
+            AuditdStoppedDetector(),
+            FirewalldStoppedDetector(),
+            TelnetEnabledDetector(),
+            NetcatInstallationDetector(),
+            NmapInstallationDetector(),
+            CurlDownloadDetector(),
+            WgetDownloadDetector(),
+            SCPFileTransferDetector(),
+            TarCreationDetector()
         ]
 
         # Keep track of log stateful data
@@ -84,6 +100,6 @@ class SIEMDetectionEngine:
         # Work through Detectors for passed event
         #   Extend the all_findings array with finding arrays returned
         for eDetector in self.eventDetectors:
-            all_findings.extend(eDetector.process(event, self.eventContexts))
+            all_findings.extend(eDetector.processEvent(event, self.eventContexts))
 
         return all_findings

@@ -13,22 +13,22 @@
 # Detectors class imports
 #=====================================
 # Authentication
-from src.SIEM_CLASSES.DETECTORS.AuthenticationDetector import (SSHBruteForceDetector, SuccessfulLoginDetector, InvalidUserAuthenticationDetector, RootLoginDetector)
+from .AuthenticationDetector import (SSHBruteForceDetector, SuccessfulLoginDetector, InvalidUserAuthenticationDetector, RootLoginDetector)
 
 # User Management
-from src.SIEM_CLASSES.DETECTORS.UserManagementDetector import (UserCreationDetector, UserDeletionDetector, PasswordChangeDetector)
+from .UserManagementDetector import (UserCreationDetector, UserDeletionDetector, PasswordChangeDetector)
 
 # Privilege Escalation
-from src.SIEM_CLASSES.DETECTORS.PrivilegeEscalationDetector import (UserAddedToSudoDetector, UserAddedToWheelDetector)
+from .PrivilegeEscalationDetector import (UserAddedToSudoDetector, UserAddedToWheelDetector)
 
 # Credential Access
-from src.SIEM_CLASSES.DETECTORS.CredentialAccessDetector import (ShadowFileAccessDetector, PasswdFileAccessDetector)
+from .CredentialAccessDetector import (ShadowFileAccessDetector, PasswdFileAccessDetector)
 
 # Defense Evasion
-from src.SIEM_CLASSES.DETECTORS.DefenseEvasionDetector import (AuditdStoppedDetector, FirewalldStoppedDetector, TelnetEnabledDetector)
+from .DefenseEvasionDetector import (AuditdStoppedDetector, FirewalldStoppedDetector, TelnetEnabledDetector)
 
 # Suspicious Commands
-from src.SIEM_CLASSES.DETECTORS.SuspiciousCommandDetector import (NetcatInstallationDetector, NmapInstallationDetector, CurlDownloadDetector, WgetDownloadDetector, SCPFileTransferDetector, TarCreationDetector)
+from .SuspiciousCommandDetector import (NetcatInstallationDetector, NmapInstallationDetector, CurlDownloadDetector, WgetDownloadDetector, SCPFileTransferDetector, TarCreationDetector)
 
 #=====================================
 # Metadata

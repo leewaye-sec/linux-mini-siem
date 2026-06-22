@@ -6,16 +6,15 @@
 #
 #==========================================================================
 # Import data classes
-from src.SIEM_CLASSES.StandardizedDataStructures import LogEvent
 from src.SIEM_CLASSES.StandardizedDataStructures import EventFinding
 
 # Import base detector
-from src.SIEM_CLASSES.DETECTORS.DetectorBaseDefinition import Detector
+from .DetectorBaseDefinition import BaseDetector
 
 #=====================================
 # Detector Class : SSHBruteForceDetector
 #=====================================
-class SSHBruteForceDetector(Detector):
+class SSHBruteForceDetector(BaseDetector):
 
     def processEvent(self, event, context):
         # Define the decision pathways
@@ -131,7 +130,7 @@ class SSHBruteForceDetector(Detector):
 #=====================================
 # Detector Class : SuccessfulLoginEvent
 #=====================================
-class SuccessfulLoginDetector(Detector):
+class SuccessfulLoginDetector(BaseDetector):
     def processEvent(self, event, context):
 
         # Retrieve ip addr
@@ -197,7 +196,7 @@ class SuccessfulLoginDetector(Detector):
 #=====================================
 # Detector Class : InvalidUserAuthenticationEvent
 #=====================================
-class InvalidUserAuthenticationDetector(Detector):
+class InvalidUserAuthenticationDetector(BaseDetector):
     def processEvent(self, event, context):
 
         # Retrieve some variables
@@ -209,12 +208,12 @@ class InvalidUserAuthenticationDetector(Detector):
                 EventFinding(
                     severity_level="LOW",
                     detected_finding=f"{event.entry_subclass}",
-                    finding_description=f"Attempted Login with Invalid User {context.failed_logins.get()}",
+                    finding_description=f"Attempted Login with Invalid User {context.failed_logins.get(login_ip, 0)}",
                     timestamp=event.entry_timestamp,
                     source_ip=login_ip,
                     privilege_level=event.entry_privilege_level,
                     associated_username=login_username,
-                    event_count=context.failed_logins.get(login_ip)
+                    event_count=context.failed_logins.get(login_ip, 0)
                 )
             ]
         # Return 'nothing' / empty array if event isn't for this detector
@@ -223,7 +222,7 @@ class InvalidUserAuthenticationDetector(Detector):
 #=====================================
 # Detector Class : RootLoginEvent
 #=====================================
-class RootLoginDetector(Detector):
+class RootLoginDetector(BaseDetector):
     def processEvent(self, event, context):
         # Retrieve ip addr
         successful_login_ip = event.entry_source_ip

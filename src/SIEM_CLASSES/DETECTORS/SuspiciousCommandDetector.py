@@ -6,16 +6,15 @@
 #
 #==========================================================================
 # Import data classes
-from src.SIEM_CLASSES.StandardizedDataStructures import LogEvent
 from src.SIEM_CLASSES.StandardizedDataStructures import EventFinding
 
 # Import base detector
-from src.SIEM_CLASSES.DETECTORS.DetectorBaseDefinition import Detector
+from .DetectorBaseDefinition import BaseDetector
 
 #=====================================
 # Detector Class : NetcatInstallationEvent
 #=====================================
-class NetcatInstallationDetector(Detector):
+class NetcatInstallationDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "NETCAT_INSTALLATION":
             return [
@@ -34,7 +33,7 @@ class NetcatInstallationDetector(Detector):
 #=====================================
 # Detector Class : NmapInstallationEvent
 #=====================================
-class NmapInstallationDetector(Detector):
+class NmapInstallationDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "NMAP_INSTALLATION":
             return [
@@ -53,7 +52,7 @@ class NmapInstallationDetector(Detector):
 #=====================================
 # Detector Class : CurlDownloadEvent
 #=====================================
-class CurlDownloadDetector(Detector):
+class CurlDownloadDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "CURL_DOWNLOAD":
             # Isolate command
@@ -76,7 +75,7 @@ class CurlDownloadDetector(Detector):
 #=====================================
 # Detector Class : WgetDownloadEvent
 #=====================================
-class WgetDownloadDetector(Detector):
+class WgetDownloadDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "WGET_DOWNLOAD":
             # Isolate command
@@ -99,7 +98,7 @@ class WgetDownloadDetector(Detector):
 #=====================================
 # Detector Class : tarCreationDetector
 #=====================================
-class TarCreationDetector(Detector):
+class TarCreationDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "TAR_ARCHIVE_CREATION":
             # Isolate command
@@ -122,7 +121,7 @@ class TarCreationDetector(Detector):
 #=====================================
 # Detector Class : SCPFileTransferDetector
 #=====================================
-class SCPFileTransferDetector(Detector):
+class SCPFileTransferDetector(BaseDetector):
     def processEvent(self, event, context):
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "SCP_FILE_TRANSFER":
             # Isolate command

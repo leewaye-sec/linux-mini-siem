@@ -124,28 +124,83 @@ class siemLogParser:
                     log_type = "COMMAND_EXECUTION"
                     log_class = "PRIVILEGE_ESCALATION"
                     log_subclass = "USER_ADDED_TO_SUDO"
+                    # Put the event together
+                    return LogEvent(
+                        entry_timestamp=log_timestamp,
+                        entry_hostname=log_hostname,
+                        entry_type=log_type,
+                        entry_class=log_class,
+                        entry_subclass=log_subclass,
+                        entry_username=username,
+                        entry_privilege_level=privilege_level,
+                        entry_raw_log=line
+                    )
                 elif "-aG wheel":
                     log_type = "COMMAND_EXECUTION"
                     log_class = "PRIVILEGE_ESCALATION"
                     log_subclass = "USER_ADDED_TO_WHEEL"
+                    # Put the event together
+                    return LogEvent(
+                        entry_timestamp=log_timestamp,
+                        entry_hostname=log_hostname,
+                        entry_type=log_type,
+                        entry_class=log_class,
+                        entry_subclass=log_subclass,
+                        entry_username=username,
+                        entry_privilege_level=privilege_level,
+                        entry_raw_log=line
+                    )
 
             # Sudo check : scp
             elif 'scp' in log_entry_info:
                 log_type = "COMMAND_EXECUTION"
                 log_class = "SUSPICIOUS_COMMAND"
                 log_subclass = "SCP_FILE_TRANSFER"
+                # Put the event together
+                return LogEvent(
+                    entry_timestamp=log_timestamp,
+                    entry_hostname=log_hostname,
+                    entry_type=log_type,
+                    entry_class=log_class,
+                    entry_subclass=log_subclass,
+                    entry_username=username,
+                    entry_privilege_level=privilege_level,
+                    entry_raw_log=line
+                )
 
             # Sudo check : sensitive file - shadow
             elif '/etc/shadow' in log_entry_info:
                 log_type = "COMMAND_EXECUTION"
                 log_class = "CREDENTIAL_ACCESS"
                 log_subclass = "SHADOW_FILE_ACCESS"
+                # Put the event together
+                return LogEvent(
+                    entry_timestamp=log_timestamp,
+                    entry_hostname=log_hostname,
+                    entry_type=log_type,
+                    entry_class=log_class,
+                    entry_subclass=log_subclass,
+                    entry_username=username,
+                    entry_privilege_level=privilege_level,
+                    entry_raw_log=line
+                )
 
             # Sudo check : sensitive file - passwd
             elif '/etc/passwd' in log_entry_info:
                 log_type = "COMMAND_EXECUTION"
                 log_class = "CREDENTIAL_ACCESS"
                 log_subclass = "PASSWD_FILE_ACCESS"
+                # Put the event together
+                return LogEvent(
+                    entry_timestamp=log_timestamp,
+                    entry_hostname=log_hostname,
+                    entry_type=log_type,
+                    entry_class=log_class,
+                    entry_subclass=log_subclass,
+                    entry_username=username,
+                    entry_privilege_level=privilege_level,
+                    entry_raw_log=line
+                )
 
             # Sudo check : possible exfiltration
             elif 'tar -c' in log_entry_info:
@@ -153,17 +208,17 @@ class siemLogParser:
                 log_class = "SUSPICIOUS_COMMAND"
                 log_subclass = "TAR_ARCHIVE_CREATION"
 
-            # Put the event together
-            return LogEvent(
-                entry_timestamp=log_timestamp,
-                entry_hostname=log_hostname,
-                entry_type=log_type,
-                entry_class=log_class,
-                entry_subclass=log_subclass,
-                entry_username=username,
-                entry_privilege_level=privilege_level,
-                entry_raw_log=line
-            )
+                # Put the event together
+                return LogEvent(
+                    entry_timestamp=log_timestamp,
+                    entry_hostname=log_hostname,
+                    entry_type=log_type,
+                    entry_class=log_class,
+                    entry_subclass=log_subclass,
+                    entry_username=username,
+                    entry_privilege_level=privilege_level,
+                    entry_raw_log=line
+                )
 
         #------------------------
         # Event Type : sshd
@@ -179,27 +234,52 @@ class siemLogParser:
 
             # Determine the username - extract the information via ... for <user> from ...
             log_user_name = re.search(r"for (.+) from", log_entry_info).group(1)
+
             # Determine the entry type
-            if "Failed password" in log_entry_info:
+            if "invalid user" in log_entry_info:
+                log_subclass = "INVALID_USER_LOGIN"
+                # Put the event together
+                return LogEvent(
+                    entry_timestamp=log_timestamp,
+                    entry_hostname=log_hostname,
+                    entry_type=log_type,
+                    entry_class=log_class,
+                    entry_subclass=log_subclass,
+                    entry_source_ip=log_source_ip,
+                    entry_privilege_level="Non-Elevated",
+                    entry_username="Invalid Username",
+                    entry_raw_log=line
+                )
+            elif "Failed password" in log_entry_info:
                 log_subclass = "FAILED_LOGIN"
+                # Put the event together
+                return LogEvent(
+                    entry_timestamp=log_timestamp,
+                    entry_hostname=log_hostname,
+                    entry_type=log_type,
+                    entry_class=log_class,
+                    entry_subclass=log_subclass,
+                    entry_source_ip=log_source_ip,
+                    entry_privilege_level="Non-Elevated",
+                    entry_username=log_user_name,
+                    entry_raw_log=line
+                )
             elif "Accepted password" in log_entry_info:
                 log_subclass = "SUCCESSFUL_LOGIN"
-            elif "invalid user" in log_entry_info:
-                log_subclass = "INVALID_USER_LOGIN"
+                # Put the event together
+                return LogEvent(
+                    entry_timestamp=log_timestamp,
+                    entry_hostname=log_hostname,
+                    entry_type=log_type,
+                    entry_class=log_class,
+                    entry_subclass=log_subclass,
+                    entry_source_ip=log_source_ip,
+                    entry_privilege_level="Non-Elevated",
+                    entry_username=log_user_name,
+                    entry_raw_log=line
+                )
 
 
-            # Put the event together
-            return LogEvent(
-                entry_timestamp=log_timestamp,
-                entry_hostname=log_hostname,
-                entry_type=log_type,
-                entry_class=log_class,
-                entry_subclass=log_subclass,
-                entry_source_ip=log_source_ip,
-                entry_privilege_level="Non-Elevated",
-                entry_username=log_user_name,
-                entry_raw_log=line
-            )
 
         #------------------------
         # Event Type : userdel
@@ -289,6 +369,16 @@ class siemLogParser:
                     log_type = "SERVICE_CHANGE"
                     log_class = "DEFENSE_EVASION"
                     log_subclass = "TELNET_ENABLED"
+                    # Put the event together
+                    return LogEvent(
+                        entry_timestamp=log_timestamp,
+                        entry_hostname=log_hostname,
+                        entry_type=log_type,
+                        entry_class=log_class,
+                        entry_subclass=log_subclass,
+                        entry_privilege_level="Non-Elevated",
+                        entry_raw_log=line
+                    )
             elif "Restarted" in log_entry_info:
                 pass
             elif "Stopped" in log_entry_info:
@@ -296,21 +386,30 @@ class siemLogParser:
                     log_type = "SERVICE_CHANGE"
                     log_class = "DEFENSE_EVASION"
                     log_subclass = "AUDITD_STOPPED"
+                    # Put the event together
+                    return LogEvent(
+                        entry_timestamp=log_timestamp,
+                        entry_hostname=log_hostname,
+                        entry_type=log_type,
+                        entry_class=log_class,
+                        entry_subclass=log_subclass,
+                        entry_privilege_level="Non-Elevated",
+                        entry_raw_log=line
+                    )
                 elif 'firewalld' in log_entry_info:
                     log_type = "SERVICE_CHANGE"
                     log_class = "DEFENSE_EVASION"
                     log_subclass = "FIREWALL_STOPPED"
-
-            # Put the event together
-            return LogEvent(
-                entry_timestamp=log_timestamp,
-                entry_hostname=log_hostname,
-                entry_type=log_type,
-                entry_class=log_class,
-                entry_subclass=log_subclass,
-                entry_privilege_level="Non-Elevated",
-                entry_raw_log=line
-            )
+                    # Put the event together
+                    return LogEvent(
+                        entry_timestamp=log_timestamp,
+                        entry_hostname=log_hostname,
+                        entry_type=log_type,
+                        entry_class=log_class,
+                        entry_subclass=log_subclass,
+                        entry_privilege_level="Non-Elevated",
+                        entry_raw_log=line
+                    )
 
         # Event is unknown / unparsed
         else:

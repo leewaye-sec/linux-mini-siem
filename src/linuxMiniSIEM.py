@@ -18,8 +18,6 @@ from pathlib import Path
 import textwrap
 from datetime import datetime
 
-from src.SIEM_CLASSES.ReportGeneration import ReportGeneration
-
 #--------------------
 # Global Variables
 #--------------------
@@ -46,9 +44,10 @@ global CLASS_PATH
 CLASS_PATH = CWD + "SIEM_CLASSES"
 sys.path.append(CLASS_PATH)
 
-# Import DataClass Definitions
+# Import DataClass and Class Definitions
 from SIEM_CLASSES.SIEMLogParser import siemLogParser
 from SIEM_CLASSES.SIEMDetectionEngine import SIEMDetectionEngine
+from SIEM_CLASSES.ReportGeneration import ReportGeneration
 
 #--------------------------------------------------------------------------
 # Functions
@@ -85,11 +84,16 @@ def siemWrapper(input_log):
     log_findings = []
 
     # Begin log ingest and processing
-    logging.info(f"Attempting ingest of log file [ {os.path.basename(OUTPUT)} ]")
+    logging.info(f"Attempting ingest of log file [ {input_log} ]")
     try:
         with open(input_log, "r") as ifile:
             # Iterate through the lines and standardize into an event
+            logging.debug(f"Ingest log opened and ingesting")
             for line in ifile:
+                # Skip empty lines
+                if not line.strip():
+                    continue
+
                 log_event = log_parser.parseLogLine(line)
 
                 # Ensure that the event isn't empty / None
@@ -99,7 +103,10 @@ def siemWrapper(input_log):
                 # Once the log event is standardized:
                 #   Proccess the event(s) and create findings via detectors
                 #   Once findings are processed, add to log_findings array
-                log_findings.extend(siem_engine.process(log_event))
+                returned_log_finding = siem_engine.process(log_event)
+                if returned_log_finding:
+                    log_findings.extend(siem_engine.process(log_event))
+
 
         # Generate report from findings
         logging.info(f"Compiling findings in to JSON report")
@@ -168,6 +175,9 @@ def main():
     # Determine output name (even if stdout only)
     output_filename = f"{CWD}{TIMESTAMP}_SIEM_Findings.json"
     OUTPUT = args.output if args.output else output_filename
+
+    # Determine print
+    PRINT = args.print
 
     # Call the SIEM wrapper - pass the input log path
     siemWrapper(args.input)

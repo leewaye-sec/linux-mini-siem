@@ -11,9 +11,8 @@
 #----------------
 import logging
 import os.path
-
-from src.SIEM_CLASSES.StandardizedDataStructures import EventFinding
 import json
+import sys
 
 class ReportGeneration:
     # Generate json report, if stdout-only else write to file
@@ -29,11 +28,13 @@ class ReportGeneration:
             "findings": []
         }
 
+        #print(f"{passed_findings}")
         # Work through the returned findings
         for finding in passed_findings:
 
             # Add the dataclass converted to a dict to the findings array
-            report["findings"].append(finding.convert_to_dict)
+            logging.debug(f"Adding finding to report [ {finding} ]")
+            report["findings"].append(finding.convert_to_dict())
 
             # Update counts
             if finding.severity_level == "CRITICAL":

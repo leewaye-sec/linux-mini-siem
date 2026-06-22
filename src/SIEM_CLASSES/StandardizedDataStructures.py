@@ -44,4 +44,11 @@ class EventFinding:
     additional_details: str | None = None
 
     def convert_to_dict(self):
-        return asdict(self)
+        converted_dict = asdict(self)
+
+        # json.dumps can't handle datetime/timestamp
+        #   In the conversion to dict, handle the timestamp field
+        if converted_dict["timestamp"]:
+            converted_dict["timestamp"] = converted_dict["timestamp"].isoformat()
+
+        return converted_dict

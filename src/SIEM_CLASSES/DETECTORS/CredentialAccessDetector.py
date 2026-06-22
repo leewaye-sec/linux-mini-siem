@@ -10,12 +10,12 @@ from src.SIEM_CLASSES.StandardizedDataStructures import LogEvent
 from src.SIEM_CLASSES.StandardizedDataStructures import EventFinding
 
 # Import base detector
-from src.SIEM_CLASSES.DETECTORS.DetectorBaseDefinition import Detector
+from .DetectorBaseDefinition import BaseDetector
 
 #=====================================
 # Detector Class : ShadowFileAccessEvent
 #=====================================
-class ShadowFileAccessDetector(Detector):
+class ShadowFileAccessDetector(BaseDetector):
     def processEvent(self, event, context):
         # Process if event marked for /etc/shadow access
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "CREDENTIAL_ACCESS" and event.entry_subclass == "SHADOW_FILE_ACCESS":
@@ -35,7 +35,7 @@ class ShadowFileAccessDetector(Detector):
 #=====================================
 # Detector Class : PasswdFileAccessEvent
 #=====================================
-class PasswdFileAccessDetector(Detector):
+class PasswdFileAccessDetector(BaseDetector):
     def processEvent(self, event, context):
         # Process if event marked for /etc/passwd access
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "CREDENTIAL_ACCESS" and event.entry_subclass == "PASSWD_FILE_ACCESS":
