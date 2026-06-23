@@ -6,78 +6,52 @@ This project focuses on core detection engineering concepts, including log parsi
 
 ---
 
-## Project Goals
-
-The primary goals of this project are:
+## Key Features
 
 * Parse Linux system logs
-* Detect common security events
+* Normalize security events
+* Detect common security events and suspicious activity
 * Correlate related events
 * Generate structured findings
-* Export results as JSON reports
-* Explore SOC and detection engineering workflows
+* Export JSON reports
+
+---
+## About This Project
+
+Mini SIEM was developed to explore detection engineering concepts commonly used in Security Operations Centers (SOCs). The project focuses on transforming Linux log data into normalized events, applying security detections, and generating structured findings suitable for further analysis and reporting.
 
 ---
 
-## Planned Features
+## Architecture
 
-### Log Ingestion
-
-* Authentication logs (`auth.log`)
-* System logs (`syslog`)
-* Custom log file support
-
-### Detection Rules
-
-* SSH brute force attempts
-* Successful login after multiple failures
-* New user creation
-* Sudo privilege usage
-* Service modifications
-* Authentication anomalies
-
-### Event Correlation
-
-* Multiple failed logins from a single source
-* Account compromise indicators
-* Suspicious privilege escalation activity
-
-### Reporting
-
-* Terminal output
-* JSON report generation
-* Audit summaries
-* Severity classifications
+![Linux Mini-SIEM Architecture](docs/LinuxMiniSIEM.png)
 
 ---
 
-## Planned Architecture
-
+## Detection Workflow
 ```text
 Log Sources
-     |
-     v
+ ↓
 Log Parser
-     |
-     v
-Detection Engine
-     |
-     +--> Authentication Detections
-     +--> User Management Detections
-     +--> Privilege Escalation Detections
-     +--> Defense Evasion Detections
-     +--> Credential Access Detections
-     +--> Suspicious Command Detections
-     |
-     v
-Event Correlation
-     |
-     v
-Reporting Engine
-     |
-     +--> Console Output
-     +--> JSON Reports
+ ↓
+Normalized Events
+ ↓
+Detection Modules
+ ↓
+Findings
+ ↓
+Reports
 ```
+
+---
+
+## Supported Log Sources
+
+| Source | Status |
+|----------|----------|
+| auth.log | Supported |
+| syslog | Supported |
+| Custom Test Logs | Supported |
 
 ---
 
@@ -117,7 +91,7 @@ mini-siem/
 
 ---
 
-## Planned Detection Rules
+## Detection Coverage
 
 ### Authentication Events
 
@@ -174,14 +148,49 @@ mini-siem/
 
 ---
 
+## Detection Statistics
+
+Current detection coverage includes:
+
+- 3 Authentication detections
+- 3 User Management detections
+- 2 Privilege Escalation detections
+- 2 Credential Access detections
+- 3 Defense Evasion detections
+- 6 Suspicious Command detections
+
+Total: 19 detection rules
+
+---
+
+## Example Normalized Event
+
+```json
+{
+    "entry_type": "AUTHENTICATION",
+    "entry_class": "AUTHENTICATION",
+    "entry_subclass": "FAILED_LOGIN",
+    "entry_timestamp": "2026-06-20T08:10:01",
+    "source_ip": "203.0.113.50",
+    "associated_username": "root"
+}
+```
+
+---
+
 ## Example Finding
 
 ```json
 {
-  "event": "SSH_BRUTE_FORCE",
-  "source_ip": "192.168.1.100",
-  "attempt_count": 15,
-  "severity": "HIGH"
+    "severity_level": "CRITICAL",
+    "detected_finding": "SUCCESSFUL_LOGIN",
+    "finding_description": "Root Login Success after [ 4 ] Failures",
+    "timestamp": "2026-06-20T08:10:11",
+    "privilege_level": "Non-Elevated",
+    "source_ip": "203.0.113.50",
+    "associated_username": "root",
+    "event_count": 4,
+    "additional_details": null
 }
 ```
 
@@ -193,41 +202,22 @@ mini-siem/
 * Linux
 * JSON
 * Regular Expressions
-* Logging
-* Security Event Analysis
 
 ---
 
-## Learning Objectives
+## Documentation
 
-This project is intended to develop practical experience with:
-
-* Detection engineering
-* Security operations (SOC)
-* Log analysis
-* Threat detection
-* Event correlation
-* Security reporting
-* Incident investigation workflows
-
+- [Detection Matrix](docs/detection-matrix.md)
+- Example Log Files (`examples/`)
+ 
 ---
 
-## Planned Future Enhancements
+## Future Enhancements
 
-* MITRE ATT&CK mapping
-* Sigma-style detection rules
-
----
-
-## Status
-
-🚧 Initial development phase
-
-Current focus:
-
-* Repository setup
-* Log parser development
-* Initial SSH detection rules
+- MITRE ATT&CK mapping
+- Sigma-style detection rules
+- Additional Linux log source support
+- Expanded event correlation capabilities
 
 ---
 
