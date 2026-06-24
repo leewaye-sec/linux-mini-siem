@@ -26,6 +26,7 @@ class ShadowFileAccessDetector(BaseDetector):
                     finding_description=f"Access of sensitive file [ /etc/shadow ]",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level
                 )
             ]
@@ -46,6 +47,7 @@ class PasswdFileAccessDetector(BaseDetector):
                     finding_description=f"Access of sensitive file [ /etc/passwd ]",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level
                 )
             ]

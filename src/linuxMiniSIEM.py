@@ -105,7 +105,7 @@ def siemWrapper(input_log):
                 #   Once findings are processed, add to log_findings array
                 returned_log_finding = siem_engine.process(log_event)
                 if returned_log_finding:
-                    log_findings.extend(siem_engine.process(log_event))
+                    log_findings.extend(returned_log_finding)
 
 
         # Generate report from findings

@@ -24,6 +24,7 @@ class UserCreationDetector(BaseDetector):
                     finding_description=f"User management [ New User ]",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level
                 )
             ]
@@ -43,6 +44,7 @@ class UserDeletionDetector(BaseDetector):
                     finding_description=f"User management [ User Deleted ]",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level
                 )
             ]
@@ -62,6 +64,7 @@ class PasswordChangeDetector(BaseDetector):
                     finding_description=f"User management [ User Password Change ]",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level,
                 )
             ]

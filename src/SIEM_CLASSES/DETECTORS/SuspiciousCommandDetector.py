@@ -24,6 +24,7 @@ class NetcatInstallationDetector(BaseDetector):
                     finding_description=f"Package installation [ netcat ]",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level,
                 )
             ]
@@ -43,6 +44,7 @@ class NmapInstallationDetector(BaseDetector):
                     finding_description=f"Package installation [ nmap ]",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level,
                 )
             ]
@@ -62,9 +64,10 @@ class CurlDownloadDetector(BaseDetector):
                 EventFinding(
                     severity_level="HIGH",
                     detected_finding=f"{event.entry_subclass}",
-                    finding_description=f"",
+                    finding_description=f"Curl Download Initiated",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level,
                     additional_details=command
                 )
@@ -85,9 +88,10 @@ class WgetDownloadDetector(BaseDetector):
                 EventFinding(
                     severity_level="HIGH",
                     detected_finding=f"{event.entry_subclass}",
-                    finding_description=f"",
+                    finding_description=f"Wget Download Initiated",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level,
                     additional_details=command
                 )
@@ -108,9 +112,10 @@ class TarCreationDetector(BaseDetector):
                 EventFinding(
                     severity_level="MEDIUM",
                     detected_finding=f"{event.entry_subclass}",
-                    finding_description=f"",
+                    finding_description=f"Tar Archive Created",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level,
                     additional_details=command
                 )
@@ -126,14 +131,16 @@ class SCPFileTransferDetector(BaseDetector):
         if event.entry_type == "COMMAND_EXECUTION" and event.entry_class == "SUSPICIOUS_COMMAND" and event.entry_subclass == "SCP_FILE_TRANSFER":
             # Isolate command
             log = event.entry_raw_log
-            command = log.split(':')[-1].split(';')[-1]
+            command_dirty = f"{log.split(':')[-2]}:{log.split(':')[-1]}"
+            command = command_dirty.split(';')[-1]
             return [
                 EventFinding(
                     severity_level="HIGH",
                     detected_finding=f"{event.entry_subclass}",
-                    finding_description=f"",
+                    finding_description=f"Secure file transfer initiated",
                     timestamp=event.entry_timestamp,
                     associated_username=event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level,
                     additional_details=command
                 )

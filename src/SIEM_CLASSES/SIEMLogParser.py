@@ -34,9 +34,11 @@ class siemLogParser:
         line_split = line.split()
 
         # Timestamp
-        #   Isolate and then remove
-        log_timestamp = datetime.strptime(' '.join(line_split[:3]), "%b %d %H:%M:%S")
+        #   Isolate, remove, format timestamp
+        log_timestamp_preformat = ' '.join(line_split[:3])
         del line_split[:3]
+        current_year = datetime.now().year
+        log_timestamp = datetime.strptime(f"{current_year} {log_timestamp_preformat}", "%Y %b %d %H:%M:%S")
 
         # Hostname
         log_hostname = line_split[0]
@@ -44,7 +46,7 @@ class siemLogParser:
 
         # Log Entry Type
         #   Remove the unnecessary extra from the entry (e.g. sshd[7394]: --> SSHD)
-        log_entry = re.sub(r"(\[\d+\]):", "", line_split[0]).upper()
+        log_entry = re.sub(r"(\[\d+\]):", "", line_split[0]).upper().strip(':')
         del line_split[0]
 
         # Join the remaining line_split back into entry information string
@@ -93,7 +95,7 @@ class siemLogParser:
                     entry_source_ip=log_curl_ip,
                     entry_username=username,
                     entry_privilege_level=privilege_level,
-                    entry_raw_log=line
+                    entry_raw_log=line.strip()
                 )
 
             # Sudo check : curl
@@ -115,7 +117,7 @@ class siemLogParser:
                     entry_source_ip=log_wget_ip,
                     entry_username=username,
                     entry_privilege_level=privilege_level,
-                    entry_raw_log=line
+                    entry_raw_log=line.strip()
                 )
 
             # Sudo check : usermod
@@ -133,7 +135,7 @@ class siemLogParser:
                         entry_subclass=log_subclass,
                         entry_username=username,
                         entry_privilege_level=privilege_level,
-                        entry_raw_log=line
+                        entry_raw_log=line.strip()
                     )
                 elif "-aG wheel":
                     log_type = "COMMAND_EXECUTION"
@@ -148,7 +150,7 @@ class siemLogParser:
                         entry_subclass=log_subclass,
                         entry_username=username,
                         entry_privilege_level=privilege_level,
-                        entry_raw_log=line
+                        entry_raw_log=line.strip()
                     )
 
             # Sudo check : scp
@@ -165,7 +167,7 @@ class siemLogParser:
                     entry_subclass=log_subclass,
                     entry_username=username,
                     entry_privilege_level=privilege_level,
-                    entry_raw_log=line
+                    entry_raw_log=line.strip()
                 )
 
             # Sudo check : sensitive file - shadow
@@ -182,7 +184,7 @@ class siemLogParser:
                     entry_subclass=log_subclass,
                     entry_username=username,
                     entry_privilege_level=privilege_level,
-                    entry_raw_log=line
+                    entry_raw_log=line.strip()
                 )
 
             # Sudo check : sensitive file - passwd
@@ -199,7 +201,7 @@ class siemLogParser:
                     entry_subclass=log_subclass,
                     entry_username=username,
                     entry_privilege_level=privilege_level,
-                    entry_raw_log=line
+                    entry_raw_log=line.strip()
                 )
 
             # Sudo check : possible exfiltration
@@ -217,7 +219,7 @@ class siemLogParser:
                     entry_subclass=log_subclass,
                     entry_username=username,
                     entry_privilege_level=privilege_level,
-                    entry_raw_log=line
+                    entry_raw_log=line.strip()
                 )
 
         #------------------------
@@ -247,8 +249,8 @@ class siemLogParser:
                     entry_subclass=log_subclass,
                     entry_source_ip=log_source_ip,
                     entry_privilege_level="Non-Elevated",
-                    entry_username="Invalid Username",
-                    entry_raw_log=line
+                    entry_username=log_user_name,
+                    entry_raw_log=line.strip()
                 )
             elif "Failed password" in log_entry_info:
                 log_subclass = "FAILED_LOGIN"
@@ -262,7 +264,7 @@ class siemLogParser:
                     entry_source_ip=log_source_ip,
                     entry_privilege_level="Non-Elevated",
                     entry_username=log_user_name,
-                    entry_raw_log=line
+                    entry_raw_log=line.strip()
                 )
             elif "Accepted password" in log_entry_info:
                 log_subclass = "SUCCESSFUL_LOGIN"
@@ -276,7 +278,7 @@ class siemLogParser:
                     entry_source_ip=log_source_ip,
                     entry_privilege_level="Non-Elevated",
                     entry_username=log_user_name,
-                    entry_raw_log=line
+                    entry_raw_log=line.strip()
                 )
 
 
@@ -302,7 +304,7 @@ class siemLogParser:
                 entry_subclass=log_subclass,
                 entry_username=log_username,
                 entry_privilege_level="Non-Elevated",
-                entry_raw_log=line
+                entry_raw_log=line.strip()
             )
 
         #------------------------
@@ -330,7 +332,7 @@ class siemLogParser:
                     entry_subclass=log_subclass,
                     entry_username=username,
                     entry_privilege_level="Non-Elevated",
-                    entry_raw_log=line
+                    entry_raw_log=line.strip()
                 )
 
         #------------------------
@@ -355,7 +357,7 @@ class siemLogParser:
                     entry_subclass=log_subclass,
                     entry_username=username,
                     entry_privilege_level="Non-Elevated",
-                    entry_raw_log=line
+                    entry_raw_log=line.strip()
                 )
 
         #------------------------
@@ -377,7 +379,7 @@ class siemLogParser:
                         entry_class=log_class,
                         entry_subclass=log_subclass,
                         entry_privilege_level="Non-Elevated",
-                        entry_raw_log=line
+                        entry_raw_log=line.strip()
                     )
             elif "Restarted" in log_entry_info:
                 pass
@@ -394,7 +396,7 @@ class siemLogParser:
                         entry_class=log_class,
                         entry_subclass=log_subclass,
                         entry_privilege_level="Non-Elevated",
-                        entry_raw_log=line
+                        entry_raw_log=line.strip()
                     )
                 elif 'firewalld' in log_entry_info:
                     log_type = "SERVICE_CHANGE"
@@ -408,7 +410,7 @@ class siemLogParser:
                         entry_class=log_class,
                         entry_subclass=log_subclass,
                         entry_privilege_level="Non-Elevated",
-                        entry_raw_log=line
+                        entry_raw_log=line.strip()
                     )
 
         # Event is unknown / unparsed
@@ -420,5 +422,5 @@ class siemLogParser:
                 entry_class = "UNKNOWN",
                 entry_subclass="IGNORED_EVENT",
                 entry_privilege_level="Non-Elevated",
-                entry_raw_log=line
+                entry_raw_log=line.strip()
             )

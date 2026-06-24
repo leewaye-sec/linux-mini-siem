@@ -38,6 +38,7 @@ class EventFinding:
     finding_description: str
     timestamp: datetime
     privilege_level: str
+    associated_hostname: str
     source_ip: str | None = None
     associated_username: str | None = None
     event_count: int | None = None
@@ -49,6 +50,6 @@ class EventFinding:
         # json.dumps can't handle datetime/timestamp
         #   In the conversion to dict, handle the timestamp field
         if converted_dict["timestamp"]:
-            converted_dict["timestamp"] = converted_dict["timestamp"].isoformat()
+            converted_dict["timestamp"] = converted_dict["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
 
         return converted_dict

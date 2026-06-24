@@ -23,6 +23,7 @@ class AuditdStoppedDetector(BaseDetector):
                     detected_finding=f"{event.entry_subclass}",
                     finding_description=f"Service Stopped [ auditd ]",
                     timestamp=event.entry_timestamp,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level
                 )
             ]
@@ -41,6 +42,7 @@ class FirewalldStoppedDetector(BaseDetector):
                     detected_finding=f"{event.entry_subclass}",
                     finding_description=f"Service Stopped [ firewalld ]",
                     timestamp=event.entry_timestamp,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level
                 )
             ]
@@ -59,6 +61,7 @@ class TelnetEnabledDetector(BaseDetector):
                     detected_finding=f"{event.entry_subclass}",
                     finding_description=f"Legacy Service Enabled [ telnet ]",
                     timestamp=event.entry_timestamp,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level
                 )
             ]

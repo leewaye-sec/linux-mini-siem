@@ -167,13 +167,17 @@ Total: 19 detection rules
 
 ```json
 {
-    "entry_type": "AUTHENTICATION",
-    "entry_class": "AUTHENTICATION",
-    "entry_subclass": "FAILED_LOGIN",
-    "entry_timestamp": "2026-06-20T08:10:01",
-    "source_ip": "203.0.113.50",
-    "associated_username": "root"
+  "entry_timestamp": "2026-06-18 09:25:17",
+  "entry_hostname": "server01",
+  "entry_type": "COMMAND_EXECUTION", 
+  "entry_class": "PRIVILEGE_ESCALATION",
+  "entry_subclass": "USER_ADDED_TO_SUDO",
+  "entry_privilege_level": "Elevated [sudo]",
+  "entry_source_ip": null,
+  "entry_username": "jsmith",
+  "entry_raw_log": "Jun 18 09:25:17 server01 sudo:    jsmith : TTY=pts/0 ; PWD=/home/jsmith ; USER=root ; COMMAND=/usr/bin/usermod -aG sudo contractor"
 }
+
 ```
 
 ---
@@ -182,15 +186,16 @@ Total: 19 detection rules
 
 ```json
 {
-    "severity_level": "CRITICAL",
-    "detected_finding": "SUCCESSFUL_LOGIN",
-    "finding_description": "Root Login Success after [ 4 ] Failures",
-    "timestamp": "2026-06-20T08:10:11",
-    "privilege_level": "Non-Elevated",
-    "source_ip": "203.0.113.50",
-    "associated_username": "root",
-    "event_count": 4,
-    "additional_details": null
+    "severity_level": "HIGH",
+    "detected_finding": "USER_ADDED_TO_SUDO",
+    "finding_description": "User added to privileged group [ sudo ]",
+    "timestamp": "2026-06-18 09:25:17",
+    "privilege_level": "Elevated [sudo]",
+    "associated_hostname": "server01",
+    "source_ip": null,
+    "associated_username": "jsmith",
+    "event_count": null,
+    "additional_details": " COMMAND=/usr/bin/usermod -aG sudo contractor"
 }
 ```
 

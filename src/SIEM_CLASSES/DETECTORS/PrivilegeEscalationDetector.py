@@ -28,6 +28,7 @@ class UserAddedToSudoDetector(BaseDetector):
                     finding_description=f"User added to privileged group [ sudo ]",
                     timestamp=event.entry_timestamp,
                     associated_username= event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level,
                     additional_details=command
                 )
@@ -52,6 +53,7 @@ class UserAddedToWheelDetector(BaseDetector):
                     finding_description=f"User added to privileged group [ wheel ]",
                     timestamp=event.entry_timestamp,
                     associated_username= event.entry_username,
+                    associated_hostname=event.entry_hostname,
                     privilege_level=event.entry_privilege_level,
                     additional_details=command
                 )
