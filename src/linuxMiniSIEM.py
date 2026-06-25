@@ -100,16 +100,19 @@ def siemWrapper(input_log):
                 if not log_event:
                     continue
 
+                logging.info(f"[[ PARSER ]] Event Normalized --> {log_event.entry_class} / {log_event.entry_subclass}")
+
                 # Once the log event is standardized:
                 #   Proccess the event(s) and create findings via detectors
                 #   Once findings are processed, add to log_findings array
                 returned_log_finding = siem_engine.process(log_event)
                 if returned_log_finding:
                     log_findings.extend(returned_log_finding)
+                    for finding in returned_log_finding:
+                        logging.info(f"[[ DETECTOR ]] \t{finding.severity_level} \t {finding.detected_finding}")
 
 
         # Generate report from findings
-        logging.info(f"Compiling findings in to JSON report")
         ReportGeneration().generate_json_report(log_findings, OUTPUT, PRINT)
 
     except FileNotFoundError:
