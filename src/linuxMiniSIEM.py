@@ -142,10 +142,10 @@ def main():
                     => python3 {script_version} -h
                 
                 Run script with input log
-                    => python3 {script_version} -f </path/to/input.log>
+                    => python3 {script_version} -i </path/to/input.log>
                 
                 Run script with input log and console only output
-                    => python3 {script_version} -f </path/to/input.log> -p
+                    => python3 {script_version} -i </path/to/input.log> -p
                     
             '''))
 

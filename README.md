@@ -43,6 +43,8 @@ Findings
 Reports
 ```
 
+![Linux Mini-SIEM Detection_Workflow](screenshots/LinuxSiemDetectionPipeline.png)
+
 ---
 
 ## Supported Log Sources
@@ -52,42 +54,6 @@ Reports
 | auth.log | Supported |
 | syslog | Supported |
 | Custom Test Logs | Supported |
-
----
-
-## Project Structure
-
-```text
-mini-siem/
-├── src/
-│   ├── linuxMiniSIEM.py
-│   └── SIEM_CLASSES/
-│       ├── SIEMDetectionEngine.py
-│       ├── SIEMLogParser.py
-│       ├── StandardizedDataStructures.py
-│       └── DETECTORS/
-│           ├── __init__.py
-│           ├── DetectorBaseDefinition.py
-│           ├── AuthenticationEvents.py
-│           ├── CredentialAccessEvents.py
-│           ├── DefenseEvasionEvents.py
-│           ├── PrivilegeEscalationEvents.py
-│           ├── SuspiciousCommandEvents.py
-│           └── UserManagementEvents.py
-├── docs/
-│   └── detection-matrix.md
-├── examples/
-│   ├── benign_auth.log
-│   ├── compromised_host.log
-│   ├── detection_validation.log
-│   ├── insider_activity.log
-│   └── sample_auth.log
-├── reports/
-├── screenshots/
-├── tests/
-├── requirements.txt
-└── README.md
-```
 
 ---
 
@@ -199,6 +165,63 @@ Total: 19 detection rules
 }
 ```
 
+Portion of JSON report generated from `examples/detection_validation.log`
+
+![Linux Mini-SIEM Detection_Workflow](screenshots/LinuxMiniSiemJSONReport.png)
+
+---
+## Command Line Usage
+Linux Mini SIEM is executed from the command line and supports configurable input files, verbose logging, console-only output, and custom report locations.
+
+### Common Commands
+
+| Command | Description |
+|----------|-------------|
+| `python3 linuxMiniSIEM.py -h` | Display the help menu |
+| `python3 linuxMiniSIEM.py -i examples/sample_auth.log` | Analyze a log file and generate a JSON report |
+| `python3 linuxMiniSIEM.py -i examples/sample_auth.log -v` | Run with verbose parser and detector output |
+| `python3 linuxMiniSIEM.py -i examples/sample_auth.log -p` | Print findings to the console without generating a report |
+| `python3 linuxMiniSIEM.py -i examples/sample_auth.log -o reports/custom_report.json` | Write findings to a custom report file |
+
+### Help Menu
+![Linux Mini-SIEM Detection_Workflow](screenshots/LinuxMiniSiemHelpMenu.png)
+
+---
+
+## Project Structure
+
+```text
+mini-siem/
+├── src/
+│   ├── linuxMiniSIEM.py
+│   └── SIEM_CLASSES/
+│       ├── SIEMDetectionEngine.py
+│       ├── SIEMLogParser.py
+│       ├── StandardizedDataStructures.py
+│       └── DETECTORS/
+│           ├── __init__.py
+│           ├── DetectorBaseDefinition.py
+│           ├── AuthenticationEvents.py
+│           ├── CredentialAccessEvents.py
+│           ├── DefenseEvasionEvents.py
+│           ├── PrivilegeEscalationEvents.py
+│           ├── SuspiciousCommandEvents.py
+│           └── UserManagementEvents.py
+├── docs/
+│   └── detection-matrix.md
+├── examples/
+│   ├── benign_auth.log
+│   ├── compromised_host.log
+│   ├── detection_validation.log
+│   ├── insider_activity.log
+│   └── sample_auth.log
+├── reports/
+├── screenshots/
+├── tests/
+├── requirements.txt
+└── README.md
+```
+
 ---
 
 ## Technologies
@@ -209,7 +232,6 @@ Total: 19 detection rules
 * Regular Expressions
 
 ---
-
 ## Documentation
 
 - [Detection Matrix](docs/detection-matrix.md)

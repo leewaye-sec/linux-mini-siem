@@ -48,9 +48,9 @@ class SystemEventContext:
         #-------------------------
         # failed_logins = ip : failed_login_count
         self.failed_logins = {}
-        self.failed_logins_threshold = 5
+        self.failed_logins_threshold = 3
         self.invalid_username_logins = {}
-        self.invalid_username_threshold = 5
+        self.invalid_username_threshold = 3
 
     # Define a few value return functions
     def getFailedLoginsThreshold(self):
